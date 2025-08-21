@@ -1,0 +1,244 @@
+.navbar-logo {
+  position: relative;
+  width: 120px;       /* max width of logo */
+  height: auto;
+  display: flex;
+  align-items: center; /* centers stacked images vertically */
+  justify-self: start;
+}
+
+
+/* Both logos stacked */
+.navbar-logo img {
+  position: absolute;
+  top: 9;
+  left: 0;
+  width: 100%;   /* keeps it responsive */
+  height: auto;
+  transition: opacity 0.5s ease;
+}
+
+
+/* Default: white logo visible, black logo hidden */
+.logo-white {
+  opacity: 1;
+  z-index: 2;
+}
+
+.logo-black {
+  opacity: 0;
+  z-index: 1;
+}
+
+/* On navbar hover: fade swap */
+.navbar:hover .logo-white {
+  opacity: 0;
+}
+
+.navbar:hover .logo-black {
+  opacity: 1;
+}
+
+
+
+
+.navbar {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  align-items: center;
+  padding: 1rem 2rem;
+  background: linear-gradient(to right, whitesmoke, black);
+  background-size: 200% 100%;
+  background-position: left;
+  transition: background-position 1s ease;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Navbar hover triggers gradient shift */
+.navbar:hover {
+  background-position: right;
+}
+
+
+// navbar search 
+/* Search Bar Styles */
+.navbar-search {
+  display: flex;
+  align-items: center;
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid #ccc;
+  transition: border-color 0.3s ease, border-radius 0.3s ease; 
+  justify-self: center;
+}
+
+.hidden{
+  display: flex;
+  align-items: center;
+  background: transparent;
+  border-radius: 0px;
+  overflow: hidden;
+  border: 0px solid #ccc;
+  transition: border-color 0.3s ease, border-radius 0.3s ease; 
+  justify-self: center;
+}
+
+.navbar-search input {
+  border: none;
+  padding: 0.5rem 0.8rem;
+  outline: none;
+  flex: 1;
+  font-size: 1rem;
+  background: transparent;
+}
+
+.navbar-search button {
+  background: transparent;
+  border: none;
+  padding: 0.5rem;
+  cursor: pointer;
+}
+
+.navbar-search i {
+  font-size: 1rem;
+  color: #555;
+  transition: color 0.3s ease;
+}
+
+.navbar-search button:hover i {
+  color: #f39c12;
+}
+
+.navbar-search:focus-within {
+  border-color: #f39c12;
+}
+
+.navbar:hover .navbar-search {
+  background: #f2f2f2;
+}
+
+/* Actions (Login, Cart) */
+.navbar-actions {
+  justify-self: end;
+}
+
+.navbar-actions a {
+  margin-left: 1rem;
+  padding: 0.4rem 0.8rem;
+  border: 1px solid white;
+  border-radius: 4px;
+  color: white;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+/* Navbar hover changes action button border and text */
+.navbar:hover .navbar-actions a {
+  color: white;
+  border-color: goldenrod;
+}
+
+/* Hover on action button */
+.navbar-actions a:hover {
+  background-color: #f39c12;
+  border-color: #f39c12;
+  color: #111;
+}
+
+.btn-cart {
+  position: relative; /* needed for badge positioning */
+  display: inline-block;
+  padding: 0.4rem 0.8rem;
+  border: 1px solid white;
+  border-radius: 4px;
+  color: white;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+/* Cart number bubble */
+.cart-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background-color: red;
+  color: white;
+  font-size: 0.7rem;
+  font-weight: bold;
+  padding: 2px 6px;
+  border-radius: 75%;
+  line-height: 1;
+}
+
+/* Responsive: shrink search bar */
+@media (max-width: 768px) {
+  .navbar {
+    grid-template-columns: auto 1fr auto;
+  }
+  .navbar-search {
+    width: 100%;
+    justify-self: stretch;
+  }
+}
+
+/* -----------------------------
+   Tiny appended styles for profile icon alignment
+   ----------------------------- */
+
+/* The profile anchor re-uses the same visual rules as other .navbar-actions a.
+   These small rules only ensure the SVG sizes and vertical alignment match the buttons. */
+
+/* Replace/append: make .btn-profile exactly match .btn-cart */
+/* ---------- Force exact match with .btn-cart ---------- */
+.btn-profile {
+  display: inline-flex;              /* center content exactly like an icon button */
+  align-items: center;
+  justify-content: center;
+
+  /* same padding as .btn-cart */
+  padding: 0.4rem 0.8rem;
+
+  /* same border / radius */
+  border: 1px solid white;
+  border-radius: 4px;
+
+  color: white;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  vertical-align: middle;
+  box-sizing: border-box;
+
+  /* remove text-line gaps that can affect height */
+  line-height: 0;
+
+  /* calculate the exact target height:
+     icon (20px) + vertical padding (0.4rem * 2) + top+bottom border (2px) */
+  height: calc(20px + 0.8rem + 2px);
+  min-height: 0; /* avoid inherited min-height issues */
+}
+
+/* make the icon exactly the same size as cart (which uses 20x20) */
+.btn-profile svg {
+  display: block;
+  width: 20px;
+  height: 20px;
+  line-height: 1;
+}
+
+/* same hover behavior as other action anchors */
+.btn-profile:hover {
+  background-color: #f39c12;
+  border-color: #f39c12;
+  color: #111;
+}
+
+/* ---------- tiny nudge fallback (use only if you still see 1px offset) ----------
+   Uncomment one of the two lines below depending on whether the profile is
+   visually shorter or taller than the cart button:
+   - use translateY(1px) to push the profile button down 1px
+   - use translateY(-1px) to pull it up 1px
+*/
+//  .btn-profile { transform: translateY(1px); }  
+.btn-profile { transform: translateY(-2px); }
+

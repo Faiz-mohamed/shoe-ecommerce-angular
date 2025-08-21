@@ -1,0 +1,36 @@
+<section class="cart-section" *ngIf="cartItemsNumber">
+  <h2>Your Cart</h2>
+
+  <div class="cart-items">
+
+    <div class="cart-item" *ngFor="let p of cartProducts">
+      <img [src]="p.product.image" alt="p.product.name" (click)="onProductClick(p.product.id)"
+      onerror="this.onerror=null; this.src='/assets/unavailable1.png';">
+      <div class="cart-info">
+        <h3>{{p.product.name}}</h3>
+        <div class="quantity">
+          <button (click)="decreaseQuantity(p.product.id)">-</button>
+          <span>{{ p.quantity }}</span>
+          <button (click)="increaseQuantity(p.product.id)">+</button>
+        </div>
+        <p>${{ (p.product.price)*(p.quantity ?? 1) }}</p>
+        <button class="remove-btn" (click)="remove(p.product.id)"><i class="fa fa-trash"></i></button>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="cart-summary">
+    <p>${{totalPrice}}</p>
+    <button class="checkout-btn" routerLink="/checkout">Checkout</button>
+  </div>
+</section>
+
+
+<div class="cart-empty" *ngIf="!(cartItemsNumber)">
+  <div class="cart-empty-icon">🛒</div>
+  <h2>Your cart is empty</h2>
+  <p>Looks like you haven’t added anything yet.</p>
+  <button class="shop-btn" routerLink="/shop">Start Shopping</button>
+</div>
+

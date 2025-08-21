@@ -1,0 +1,113 @@
+.auth-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 90vh;
+  background: #f8f8f8;
+  font-family: Arial, sans-serif;
+}
+
+.auth-container {
+  background: #fff;
+  padding: 30px 40px;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  width: 100%;
+  max-width: 400px;
+}
+
+.auth-container h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #111;
+}
+
+.auth-form .form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+}
+
+.auth-form .form-group label {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.auth-form .form-group input {
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  outline: none;
+  transition: border 0.3s ease;
+}
+////////
+.auth-form .form-group input.ng-invalid.ng-touched {
+  border: 1.3px solid red;
+  background-color: #ffe6e6
+}
+
+.auth-form .form-group input.ng-invalid.ng-touched:focus {
+  outline: none;
+  box-shadow: 0 0 5px rgb(255, 133, 133);  /* red glow on focus */
+}
+////////////
+// .invalid-input {
+//   border: 1px solid red !important;  /* changed from gold to red */
+//   background-color: #ffe6e6;  /* optional subtle red background */
+// }
+
+// .invalid-input:focus {
+//   outline: none;
+//   box-shadow: 0 0 5px red;  /* red glow on focus */
+// }
+
+//////////////
+
+.auth-form .form-group input:focus {
+  border-color: #f39c12;
+}
+
+.auth-btn {
+  width: 100%;
+  padding: 12px;
+  background: #f39c12;
+  color: #111;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  margin-top: 10px;
+  transition: background 0.3s ease;
+}
+
+// .auth-btn:disabled {
+//   cursor: not-allowed; 
+//   opacity: 0.6;       
+//   pointer-events: none; 
+// }
+
+
+.auth-btn:hover {
+  background: #e67e22;
+}
+
+.switch-auth {
+  text-align: center;
+  margin-top: 15px;
+  font-size: 14px;
+}
+
+.switch-auth a {
+  color: #f39c12;
+  text-decoration: none;
+}
+
+.switch-auth a:hover {
+  text-decoration: underline;
+}
+
+.auth-btn:disabled {
+  opacity: 0.6;       
+  // pointer-events: none; 
+  cursor: not-allowed; 
+}

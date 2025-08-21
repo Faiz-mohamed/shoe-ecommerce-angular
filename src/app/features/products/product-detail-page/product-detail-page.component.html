@@ -1,0 +1,49 @@
+<section class="product-detail-page">
+  <div class="product-detail-container">
+
+    <!-- Product Image -->
+    <div class="product-image">
+      <img [src]="product.image" [alt]="product.name"
+      onerror="this.onerror=null; this.src='/assets/unavailable1.png';">
+    </div>
+
+    <!-- Product Info -->
+    <div class="product-info">
+      <h2>{{product.name}}</h2>
+      <p class="category">{{product.category}}'s Shoes</p> 
+      <p class="price">{{product.price}}$</p>
+
+      <!-- Size Selection -->
+      <div class="product-sizes">
+        <label>Size:</label>
+        <select>
+          <option>6</option>
+          <option>7</option>
+          <option>8</option>
+          <option>9</option>
+          <option>10</option>
+        </select>
+      </div>
+
+      <!-- Quantity Selector -->
+      <div class="product-quantity">
+        <button class="qty-btn" id="decrease" (click)="decreaseQuantity(product.id)">-</button>
+        <!-- <input type="number" [value]="productQuantity" min="1"> -->
+         <br><p>{{ productQuantity }}</p><br>
+        <button class="qty-btn" id="increase" (click)="increaseQuantity(product.id)">+</button>
+      </div>
+
+      <!-- Add to Cart Button -->
+      <button class="add-to-cart-btn" (click)="onAddToCartClicked(product)">Add to Cart</button>
+
+      <!-- Description -->
+      <div class="product-description">
+        <h3>Description</h3>
+        <p>
+          {{product.description}}
+        </p>
+      </div>
+    </div>
+
+  </div>
+</section>

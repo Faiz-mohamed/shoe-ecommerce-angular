@@ -1,0 +1,92 @@
+/* Reset margins/paddings and set default font */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  font-family: 'Inter', sans-serif; /* or your preferred font */
+  background-color: #fff;       /* light gray background */
+  color: #111;                       /* default text color */
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+
+// ------------------pagination css----------------------------
+
+
+/* Center the pagination */
+
+.pagination-controls {
+  display: flex;
+  justify-content: center;
+  margin: 2rem 0;
+}
+
+/* Style the pagination container */
+.ngx-pagination {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  font-family: "Poppins", sans-serif;
+}
+
+/* Pagination items */
+.ngx-pagination li {
+  margin: 0 5px;
+}
+
+/* Default button look */
+.ngx-pagination a,
+.ngx-pagination .current {
+  display: inline-block;
+  padding: 8px 14px;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+/* Normal state */
+.ngx-pagination a {
+  background: #fff;
+  color: #000;
+  border: 1px solid #ccc;
+}
+
+/* Hover state */
+.ngx-pagination a:hover {
+  background: gold;
+  color: #000;
+  border-color: gold;
+}
+
+/* Active (current page) */
+.ngx-pagination .current {
+  background: #000;
+  color: #fff;
+  border: 1px solid #000;
+}
+
+/* Disabled (like Prev/Next when unavailable) */
+.ngx-pagination .disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .ngx-pagination a,
+  .ngx-pagination .current {
+    padding: 6px 10px;
+    font-size: 14px;
+  }
+}
+

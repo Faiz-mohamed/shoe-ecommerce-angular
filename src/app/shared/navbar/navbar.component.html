@@ -1,0 +1,43 @@
+<nav class="navbar">
+
+  <a routerLink="/" class="navbar-logo">
+    <img src="/assets/Step-X-logo-black.png" alt="StepX Logo" class="logo logo-white">
+    <img src="/assets/Step-X-logo-white.png" alt="StepX Logo" class="logo logo-black">
+  </a>
+
+  <!-- Search bar -->
+  <div class="navbar-search" [class.hidden]="!showSearchBar">
+    <ng-container *ngIf="showSearchBar">
+      <form #search="ngForm" (ngSubmit)="onSearchClick(search)">
+        <input type="text" placeholder="Search" [(ngModel)]="LivesearchText"  (input)="onSearchInput()" name="search">
+        <button type="submit">
+          <i class="fas fa-search"></i>
+        </button>
+      </form>
+    </ng-container>
+  </div>
+
+  <div class="navbar-actions">
+
+    <a routerLink="auth/login" class="btn-login" *ngIf="!isLoggedIn">Login</a>
+    <a routerLink="auth/signup" class="" *ngIf="!isLoggedIn">SignUp</a>
+
+    <a routerLink="cart" class="btn-cart" aria-label="Cart">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="cart-icon" viewBox="0 0 16 16">
+        <path d="M0 1a1 1 0 0 1 1-1h1.11a.5.5 0 0 1 .485.379L3.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L1.01 2H1a1 1 0 0 1-1-1zm3.14 3l1.25 6h8.22l1.25-6H3.14z"/>
+        <circle cx="6" cy="14" r="1"/>
+        <circle cx="12" cy="14" r="1"/>
+      </svg>
+      <span class="cart-badge" *ngIf="cartItemsNumber">{{cartItemsNumber}}</span>
+    </a>
+
+    <a routerLink="userprofile" class="btn-profile" aria-label="Profile" title="Profile" *ngIf="isLoggedIn">
+
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <circle cx="12" cy="8" r="3.2" stroke="currentColor" stroke-width="1.4" />
+        <path d="M4.5 20c0-3.5 3.5-6.5 7.5-6.5s7.5 3 7.5 6.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+      </svg>
+    </a>
+
+  </div>
+</nav>

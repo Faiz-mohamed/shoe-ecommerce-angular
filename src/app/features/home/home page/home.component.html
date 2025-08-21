@@ -1,0 +1,76 @@
+  <!-- Header -->
+  <header class="header">
+    <nav>
+      <a routerLink="">Home</a>
+      <a routerLink="shop">Shop</a>
+      <a href="#footer">About</a>
+      <a href="#footer">Contact</a>
+    </nav>
+  </header>
+
+  <!-- Banner -->
+  <section class="banner">
+    <div class="banner-text">
+      <h1>Step into Style</h1>
+      <p>Find your perfect pair from our latest collection.</p>
+      <a routerLink="shop" class="btn">Shop Now</a>
+    </div>
+  </section>
+
+  <!-- Categories -->
+<section class="categories">
+  <h2>Shop by Category</h2>
+  <div class="category-grid">
+
+    <div class="category-card" (click)="goToShop('Men')">
+      <img src="https://i.ibb.co/gb9y4S1y/men-Category.webp" alt="Men" >
+      <h3>Men</h3>
+    </div>
+
+    <div class="category-card" (click)="goToShop('Women')">
+      <img src="https://i.ibb.co/4wcHrV06/women-Category.png" alt="Women">
+      <h3>Women</h3>
+    </div>
+
+    <div class="category-card" (click)="goToShop('Kids')">
+      <img src="https://i.ibb.co/r2wqnRhH/kids-Category.webp" alt="Kids">
+      <h3>Kids</h3>
+    </div>
+
+    <div class="category-card" (click)="goToShop('Sports')">
+      <img src="https://i.ibb.co/tpH6v8fS/sport.jpg" alt="Sports">
+      <h3>Sports</h3>
+    </div>
+
+  </div>
+</section>
+
+
+  <!-- Trending Products -->
+  <section class="trending">
+    <h2>Trending Now</h2>
+    <div class="product-grid">
+      <div class="product-card">
+        <img src="https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/ea9a9cac-86bb-4ad9-b88a-3df90bf967b7/AIR+ZOOM+ALPHAFLY+NEXT%25+3.png" alt="Product 1">
+        <h3>Nike Air Zoom</h3>
+        <p>$120</p>
+      </div>
+      <div class="product-card">
+        <img src="https://images.pexels.com/photos/2529148/pexels-photo-2529148.jpeg" alt="Product 2">
+        <h3>Adidas Ultraboost</h3>
+        <p>$150</p>
+      </div>
+      <div class="product-card">
+        <img src="https://assets.myntassets.com/h_720,q_90,w_540/v1/assets/images/24920140/2023/9/12/0ae02eb6-dde8-4e7a-b00e-fb5e396fa66a1694513140227PumaTexturedSneakers1.jpg" alt="Product 3">
+        <h3>Puma RS-X</h3>
+        <p>$110</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta">
+    <h2>Exclusive Offers Await!</h2>
+    <p>Sign up today and enjoy 10% off your first order.</p>
+    <a href="#" class="btn">Join Now</a>
+  </section>

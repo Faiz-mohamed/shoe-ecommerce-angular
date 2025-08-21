@@ -1,0 +1,235 @@
+/* profile.css - Profile page (Black / White / Accent #f39c12) */
+
+:root{
+  --bg: #000000;
+  --card-bg: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  --white: #ffffff;
+  --muted: #bfbfbf;
+  --accent: #f39c12;   /* your requested accent */
+  --danger: #e74c3c;
+  --card-radius: 14px;
+  --gap: 18px;
+  --max-width: 980px;
+}
+
+/* base */
+*{box-sizing: border-box}
+html,body{height:100%; margin:0; font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; background:var(--bg); color:var(--white); -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale}
+
+/* main wrapper */
+.profile-page{
+  min-height: 90vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding: clamp(18px, 4vh, 48px);
+}
+
+/* card */
+.profile-card{
+  width: min(94%, var(--max-width));
+  background: var(--card-bg);
+  border: 1px solid rgba(243,156,18,0.06);
+  border-radius: var(--card-radius);
+  padding: clamp(18px, 3.2vw, 28px);
+  box-shadow: 0 18px 40px rgba(0,0,0,0.7);
+  display:flex;
+  flex-direction:column;
+  gap: calc(var(--gap) * 0.7);
+}
+
+/* top hero: avatar + name + actions */
+.profile-hero{
+  display:flex;
+  gap: 16px;
+  align-items:center;
+  justify-content:space-between;
+  flex-wrap:wrap;
+}
+
+/* avatar */
+.avatar{
+  width: 96px;
+  height: 96px;
+  border-radius: 14px;
+  overflow: hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background: linear-gradient(180deg,#1b1b1b,#111);
+  border: 1px solid rgba(255,255,255,0.04);
+  flex: 0 0 auto;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+}
+
+/* profile info block */
+.profile-info{
+  flex:1 1 auto;
+  min-width: 180px;
+  display:flex;
+  flex-direction:column;
+  gap: 6px;
+  padding-left: 8px;
+}
+
+.name{
+  margin: 0;
+  font-size: clamp(1.1rem, 2.6vw, 1.8rem);
+  font-weight: 700;
+  color: var(--white);
+  letter-spacing: -0.01em;
+}
+
+.role{
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+/* action buttons group */
+.action-group{
+  display:flex;
+  gap: 10px;
+  align-items:center;
+  justify-self:flex-end;
+  flex: 0 0 auto;
+}
+
+/* base button */
+.btn{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  padding:10px 14px;
+  font-weight:700;
+  font-size:0.95rem;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.06);
+  background: transparent;
+  color: var(--white);
+  cursor: pointer;
+  transition: transform 160ms ease, box-shadow 160ms ease, background-color 160ms ease, color 160ms ease;
+}
+
+/* logout - yellow */
+.btn-logout{
+  background: #fff;            /* default white btn for contrast */
+  color: #000;
+  border-color: #f39c12;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.55);
+}
+
+.btn-logout:hover,
+.btn-logout:focus{
+  background: #f39c12;
+  color: #fff;
+  transform: translateY(-3px);
+  box-shadow: 0 14px 40px rgba(243,156,18,0.14);
+}
+
+/* delete - red */
+.btn-delete{
+  background: transparent;
+  color: var(--white);
+  border: 1px solid #f39c12;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.55);
+
+}
+
+.btn-delete:hover,
+.btn-delete:focus{
+  background: red;
+  color: white;
+  transform: translateY(-3px);
+  box-shadow: 0 14px 40px rgba(231,76,60,0.12);
+}
+
+/* SVG icons inside buttons and labels follow currentColor */
+.btn svg,
+.label svg{
+  width: 1.05em;
+  height: 1.05em;
+  flex: 0 0 auto;
+  fill: currentColor;
+  opacity: 0.95;
+}
+
+/* body section with details */
+.profile-body{
+  margin-top: 6px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255,255,255,0.03);
+}
+
+/* definition list layout */
+.info-list{
+  margin: 0;
+  padding: 12px 4px 0 4px;
+  display:flex;
+  flex-direction:column;
+  gap: 10px;
+}
+
+.info-row{
+  display:grid;
+  grid-template-columns: 160px 1fr;
+  gap: 12px;
+  align-items:center;
+  padding: 10px 8px;
+  border-radius: 10px;
+  transition: background-color 160ms ease;
+}
+
+.info-row:hover{
+  background: rgba(255,255,255,0.01);
+}
+
+/* label column */
+.label{
+  display:flex;
+  gap:8px;
+  align-items:center;
+  color: var(--muted);
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+/* value column */
+.value{
+  color: var(--white);
+  font-size: 1rem;
+  margin: 0;
+  word-break: break-word;
+}
+
+/* smaller screens - stack */
+@media (max-width:720px){
+  .profile-hero{
+    align-items:flex-start;
+  }
+  .action-group{
+    width:100%;
+    justify-content:flex-start;
+    gap:8px;
+    margin-top:8px;
+  }
+  .info-row{
+    grid-template-columns: 1fr;
+  }
+  .label{
+    font-size: 0.92rem;
+  }
+}
+
+/* focus-visible for accessibility */
+.btn:focus-visible{
+  outline: 3px solid rgba(243,156,18,0.18);
+  outline-offset: 4px;
+  border-radius: 12px;
+}
+
+/* high-contrast fallback */
+@media (forced-colors: active){
+  .profile-card{ border-color: WindowText; background: Window; color: WindowText; }
+  .btn-logout{ background: Window; color: WindowText; }
+}

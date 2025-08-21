@@ -1,0 +1,89 @@
+<section class="checkout-page">
+  <h2>Checkout</h2>
+
+  <div class="checkout-container">
+
+    <!-- Billing & Shipping Form -->
+<form class="checkout-form" [formGroup]="checkoutForm" (ngSubmit)="onSubmit()">
+  <h3>Billing & Shipping Details</h3>
+
+  <div class="form-group">
+    <label for="fullname">Full Name</label>
+    <input type="text" id="fullname" placeholder="Enter your full name" formControlName="fullName"
+      [ngClass]="{'invalid-input': hasError('fullName','required')}">
+  </div>
+
+  <div class="form-group">
+    <label for="email">Email</label>
+    <input type="email" id="email" placeholder="Enter your email" formControlName="email"
+      [ngClass]="{'invalid-input': hasError('email','required') || hasError('email','email')}">
+  </div>
+
+  <div class="form-group">
+    <label for="number">Phone Number</label>
+    <input type="tel" id="number" placeholder="Enter your phone number" formControlName="phoneNumber"
+      [ngClass]="{'invalid-input': hasError('phoneNumber','required') || hasError('phoneNumber','pattern')}">
+  </div>
+
+  <div class="form-group">
+    <label for="address">Address</label>
+    <input type="text" id="address" placeholder="Street address" formControlName="address"
+      [ngClass]="{'invalid-input': hasError('address','required')}">
+  </div>
+
+  <div class="form-group">
+    <label for="city">City</label>
+    <input type="text" id="city" placeholder="City" formControlName="city"
+      [ngClass]="{'invalid-input': hasError('city','required')}">
+  </div>
+
+  <div class="form-group">
+    <label for="zip">ZIP Code</label>
+    <input type="text" id="zip" placeholder="ZIP code" formControlName="zip"
+      [ngClass]="{'invalid-input': hasError('zip','required')}">
+  </div>
+
+  <div class="form-group">
+    <label for="country">Country</label>
+    <input type="text" id="country" placeholder="Country" formControlName="country"
+      [ngClass]="{'invalid-input': hasError('country','required')}">
+  </div>
+
+  <div class="form-group">
+    <label for="payment-method">Payment Method</label>
+    <select class="payment-method" id="payment-method" formControlName="paymentMethod"
+      [ngClass]="{'invalid-input': hasError('paymentMethod','required')}">
+      <option value="" disabled selected>Select a payment method</option>
+      <option value="cod">Cash on Delivery</option>
+      <option value="upi">UPI</option>
+      <option value="netbanking">Net Banking</option>
+      <option value="card">Credit / Debit Card</option>
+    </select>
+  </div>
+
+  <!-- <button type="submit" class="checkout-btn" [disabled]="checkoutForm.invalid">Place Order</button> -->
+</form>
+
+
+    <!-- Order Summary -->
+    <div class="order-summary">
+      <h3>Order Summary</h3>
+
+      <div class="cart-item" *ngFor="let p of cartProducts" (click)="onProductClick(p.product.id)">
+        <img [src]="p.product.image" alt="p.product.name"
+        onerror="this.onerror=null; this.src='/assets/unavailable1.png';">
+        <div class="cart-info">
+          <h4>{{ p.product.name }}</h4>
+          <p>Quantity: {{ p.quantity }}</p>
+          <p>Price: ${{ (p.product.price)*(p.quantity ?? 1) }}</p>
+        </div>
+      </div>
+
+      <div class="order-total">
+        <p>Total: ${{ totalPrice }}</p>
+        <button class="place-order-btn" [disabled]="checkoutForm.invalid" routerLink="/checkout/orderplaced" (click)="onSubmit()">Place Order</button>
+      </div>
+    </div>
+
+  </div>
+</section>

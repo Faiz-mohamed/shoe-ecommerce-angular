@@ -1,0 +1,43 @@
+<nav class="filter-navbar">
+    <ng-container>
+  <button 
+    class="filter-btn"
+    *ngFor="let category of categories"
+    (click)="getActiveCategory(category)"
+    [ngClass]="{ 'active': activeCategory() === category }">
+    {{ category }}
+  </button>
+    </ng-container>
+</nav>
+
+<br>
+<div class="product-grid">
+  <div class="product-card" *ngFor="let product of filteredProducts()
+                                    | paginate : { itemsPerPage : itemsPerPage , currentPage : page}" 
+  (click)="onProductClick(product.id)">
+    <div class="product-image">
+      <img [src]="product.image" [alt]="product.name" 
+      onerror="this.onerror=null; this.src='/assets/unavailable1.png';">
+    </div>
+    <div class="product-info">
+      <h3>{{ product.name }}</h3>
+      <p class="price">${{ product.price }}</p>
+    </div>
+    <button class="add-to-cart" (click)="onAddToCartClicked($event , product)">Add to Cart</button>
+  </div>
+</div>
+
+<br><br>
+<div id="pagination" style="text-align: center">
+<pagination-controls
+  (pageChange)="page = $event"   
+  previousLabel="Prev"
+  nextLabel="Next" >
+</pagination-controls>
+<br><br><br>
+</div>
+
+
+  
+  
+
