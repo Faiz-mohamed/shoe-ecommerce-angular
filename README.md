@@ -34,7 +34,7 @@ Currently frontend-only, with plans to add a **.NET backend** and more advanced 
 ![Product Page](https://github.com/Faiz-mohamed/shoe-ecommerce-angular/blob/17fe1363e555885b033221305b344b2842e5628c/src/assets/screenShots/productDetailpage.png)
 
 ### Product Detail Page
-![Product Detail Page]([https://github.com/Faiz-mohamed/shoe-ecommerce-angular/blob/17fe1363e555885b033221305b344b2842e5628c/src/assets/screenShots/HomePage.png](https://github.com/Faiz-mohamed/shoe-ecommerce-angular/blob/fd978c29a328dde394fbb097728752987067a0b8/src/assets/screenShots/productPage.png))
+![Product Detail Page](https://github.com/Faiz-mohamed/shoe-ecommerce-angular/blob/fd978c29a328dde394fbb097728752987067a0b8/src/assets/screenShots/productPage.png)
 
 
 ---
