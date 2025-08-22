@@ -28,13 +28,13 @@ Currently frontend-only, with plans to add a **.NET backend** and more advanced 
 ## Screenshots
 
 ### Home Page
-![Home Page](assets/screenShots/HomePage.png)
+![Home Page](https://github.com/Faiz-mohamed/shoe-ecommerce-angular/blob/17fe1363e555885b033221305b344b2842e5628c/src/assets/screenShots/HomePage.png)
 
 ### Product Page
-![Product Page](assets/screenShots/productPage.png)
+![Product Page](https://github.com/Faiz-mohamed/shoe-ecommerce-angular/blob/17fe1363e555885b033221305b344b2842e5628c/src/assets/screenShots/productDetailpage.png)
 
 ### Product Detail Page
-![Product Detail Page](assets/screenShots/productDetailpage.png)
+![Product Detail Page](https://github.com/Faiz-mohamed/shoe-ecommerce-angular/blob/17fe1363e555885b033221305b344b2842e5628c/src/assets/screenShots/HomePage.png)
 
 
 ---
