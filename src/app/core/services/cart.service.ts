@@ -24,6 +24,16 @@ export class CartService {
     this.cartSubject.next(currentCart)
   }
 
+  isProductInCart( product :Product ) :boolean{
+    const currentCart = [...this.cartSubject.value];
+    const checkCartItems = currentCart.find(item => item.product.id === product.id)
+    if(checkCartItems){
+      return true
+    }else{
+      return false;
+    }
+  }
+
   removeFromCart(productId :number){
     const updatedCart = this.cartSubject.value.filter(item => item.product.id !== productId);
     this.cartSubject.next(updatedCart)

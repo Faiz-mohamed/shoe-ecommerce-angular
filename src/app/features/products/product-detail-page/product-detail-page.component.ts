@@ -1,5 +1,6 @@
 import { Component, OnInit , inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { Product } from 'src/app/core/models/product.model';
 import { CartService } from 'src/app/core/services/cart.service';
 import { ProductService } from 'src/app/core/services/product.service';
@@ -17,6 +18,7 @@ export class ProductDetailPageComponent  implements OnInit{
   route :ActivatedRoute = inject(ActivatedRoute)
   productService : ProductService = inject(ProductService)
   cartService : CartService = inject(CartService)
+  toastr :ToastrService = inject(ToastrService)
 
   ngOnInit(){
     const id = Number(this.route.snapshot.paramMap.get('id'))
@@ -35,6 +37,7 @@ export class ProductDetailPageComponent  implements OnInit{
   onAddToCartClicked(product :Product){
     this.cartService.addTocart(product);
     this.cartService.increaseQuantity(product.id , this.productQuantity)
+    this.toastr.success('has been added to your cart', `${product.name}${this.productQuantity > 1 ? ` (${this.productQuantity} nos)` : ''}`);
   }
 
   increaseQuantity(Id :number){

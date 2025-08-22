@@ -25,6 +25,20 @@ Currently frontend-only, with plans to add a **.NET backend** and more advanced 
 
 ---
 
+## Screenshots
+
+### Home Page
+![Home Page](assets/screenShots/HomePage.png)
+
+### Product Page
+![Product Page](assets/screenShots/productPage.png)
+
+### Product Detail Page
+![Product Detail Page](assets/screenShots/productDetailpage.png)
+
+
+---
+
 ## 📂 Project Structure
 
 ```
@@ -214,7 +228,3 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
-
-
-
-
