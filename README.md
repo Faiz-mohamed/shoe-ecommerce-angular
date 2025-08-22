@@ -66,6 +66,14 @@ Currently frontend-only, with plans to add a **.NET backend** and more advanced 
                 ├── passwordMatchValidator.ts
             ├── core.module.ts
         └── 📁features
+            └── 📁admin
+                └── 📁admin-dashboard
+                    ├── admin-dashboard.component.html
+                    ├── admin-dashboard.component.scss
+                    ├── admin-dashboard.component.spec.ts
+                    ├── admin-dashboard.component.ts
+                ├── admin-routing.module.ts
+                ├── admin.module.ts
             └── 📁auth
                 └── 📁login-page
                     ├── login-page.component.html
@@ -154,6 +162,10 @@ Currently frontend-only, with plans to add a **.NET backend** and more advanced 
         ├── app.component.ts
         ├── app.module.ts
     └── 📁assets
+        └── 📁screenShots
+            ├── HomePage.png
+            ├── productDetailpage.png
+            ├── productPage.png
         ├── .gitkeep
         ├── banner.jpg
         ├── Step-X-logo-black.png

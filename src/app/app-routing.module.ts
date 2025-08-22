@@ -29,6 +29,10 @@ const routes: Routes = [
     canActivate : [authGuard]
   },
 
+  { path : 'admin' ,
+    loadChildren: () => import('./features/admin/admin.module').then(m => m.AdminModule)
+  },
+
   { path : '**' , component : NotFoundPageComponent}
 ];
 

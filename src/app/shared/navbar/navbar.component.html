@@ -1,4 +1,4 @@
-<nav class="navbar">
+<nav class="navbar" [ngClass]="{ 'navbar-hovered': router.url.startsWith('/admin') }">
 
   <a routerLink="/" class="navbar-logo">
     <img src="/assets/Step-X-logo-black.png" alt="StepX Logo" class="logo logo-white">
@@ -18,11 +18,12 @@
   </div>
 
   <div class="navbar-actions">
-
+    <ng-container *ngIf="!router.url.startsWith('/admin')">
     <a routerLink="auth/login" class="btn-login" *ngIf="!isLoggedIn">Login</a>
     <a routerLink="auth/signup" class="" *ngIf="!isLoggedIn">SignUp</a>
+    </ng-container>
 
-    <a routerLink="cart" class="btn-cart" aria-label="Cart">
+    <a routerLink="cart" class="btn-cart" aria-label="Cart" *ngIf="!router.url.startsWith('/admin')">
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="cart-icon" viewBox="0 0 16 16">
         <path d="M0 1a1 1 0 0 1 1-1h1.11a.5.5 0 0 1 .485.379L3.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L1.01 2H1a1 1 0 0 1-1-1zm3.14 3l1.25 6h8.22l1.25-6H3.14z"/>
         <circle cx="6" cy="14" r="1"/>

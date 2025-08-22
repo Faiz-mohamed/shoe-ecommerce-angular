@@ -33,7 +33,7 @@ export class NavbarComponent implements OnInit{
 
   get showSearchBar(): boolean {
     const url = this.router.url;
-    return !(url === '/auth/login' || url === '/auth/signup');
+    return !(url === '/auth/login' || url === '/auth/signup' || url.startsWith('/admin'));
   }
 
   onSearchClick(form :NgForm){

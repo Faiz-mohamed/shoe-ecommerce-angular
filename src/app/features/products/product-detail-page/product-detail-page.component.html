@@ -28,8 +28,8 @@
       <!-- Quantity Selector -->
       <div class="product-quantity">
         <button class="qty-btn" id="decrease" (click)="decreaseQuantity(product.id)">-</button>
-        <!-- <input type="number" [value]="productQuantity" min="1"> -->
-         <br><p>{{ productQuantity }}</p><br>
+        <input type="number" [(ngModel)]="productQuantity" min="1">
+         <!-- <br><p>{{ productQuantity }}</p><br> -->
         <button class="qty-btn" id="increase" (click)="increaseQuantity(product.id)">+</button>
       </div>
 

@@ -52,6 +52,7 @@
   background-position: left;
   transition: background-position 1s ease;
   font-family: 'Poppins', sans-serif;
+  min-height: 12vh;
 }
 
 /* Navbar hover triggers gradient shift */
@@ -175,6 +176,7 @@
 @media (max-width: 768px) {
   .navbar {
     grid-template-columns: auto 1fr auto;
+    min-height: auto;
   }
   .navbar-search {
     width: 100%;
@@ -241,4 +243,29 @@
 */
 //  .btn-profile { transform: translateY(1px); }  
 .btn-profile { transform: translateY(-2px); }
+
+
+
+/* Hovered styles as a class */
+.navbar-hovered {
+  background-position: right;
+}
+
+.navbar-hovered .navbar-search {
+  background: #f2f2f2;
+}
+
+.navbar-hovered .navbar-actions a {
+  color: white;
+  border-color: goldenrod;
+}
+
+/* On navbar hover: fade swap */
+.navbar-hovered .logo-white {
+  opacity: 0;
+}
+
+.navbar-hovered .logo-black {
+  opacity: 1;
+}
 
