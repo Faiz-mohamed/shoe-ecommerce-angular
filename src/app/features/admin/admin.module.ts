@@ -11,15 +11,26 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 
 
 import { AdminRoutingModule } from './admin-routing.module';
+import { AdminProdPageComponent } from './admin-prod-page/admin-prod-page.component';
+import { AdminOrdersComponent } from './admin-orders/admin-orders.component';
+import { AdminUsersComponent } from './admin-users/admin-users.component';
+import { AdminSettingsComponent } from './admin-settings/admin-settings.component';
 import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
+import { RouterModule } from '@angular/router';
+import { AdminPageComponent } from './admin-page/admin.component';
 
 
 @NgModule({
   declarations: [
-    AdminDashboardComponent
+    AdminPageComponent,
+    AdminProdPageComponent,
+    AdminOrdersComponent,
+    AdminUsersComponent,
+    AdminSettingsComponent
   ],
   imports: [
     CommonModule,
+    RouterModule,
     AdminRoutingModule,
     MatToolbarModule,
     MatSidenavModule,

@@ -1,47 +1,55 @@
-<mat-sidenav-container>
-  <mat-sidenav mode="side" opened>
-    <ul>
-      <li routerLink="/admin/dashboard">
-        <mat-icon>dashboard</mat-icon>
-        <span>Dashboard</span>
-      </li>
-      <li routerLink="/admin/products">
-        <mat-icon>shopping_bag</mat-icon>
-        <span>Products</span>
-      </li>
-      <li routerLink="/admin/orders">
-        <mat-icon>receipt_long</mat-icon>
-        <span>Orders</span>
-      </li>
-      <li routerLink="/admin/users">
-        <mat-icon>people</mat-icon>
-        <span>Users</span>
-      </li>
-      <li routerLink="/admin/settings">
-        <mat-icon>settings</mat-icon>
-        <span>Settings</span>
-      </li>
-    </ul>
-  </mat-sidenav>
+<!-- src/app/admin/admin-dashboard/admin-dashboard.component.html -->
+<section class="admin-dashboard">
+  <header class="ad-header">
+    <div class="title-block">
+      <h1>Admin Dashboard</h1>
+      <p class="muted">Overview of sales, products and activity</p>
+    </div>
 
-  <mat-sidenav-content>
-    <div class="dashboard-title">Admin Dashboard</div>
+    <div class="header-actions">
+      <button class="btn refresh">Refresh</button>
+    </div>
+  </header>
 
-    <!-- Donut + Line side by side -->
-    <div class="charts-grid">
-      <div class="chart-container">
-        <canvas id="donutChart"></canvas>
+  <div class="cards-row">
+    <div class="stat-card">
+      <div class="stat-title">Products</div>
+      <div class="stat-value">{{ totalProducts }}</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-title">Orders</div>
+      <div class="stat-value">{{ totalOrders }}</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-title">Users</div>
+      <div class="stat-value">{{ totalUsers }}</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-title">Low stock</div>
+      <div class="stat-value low">{{ lowStock }}</div>
+    </div>
+  </div>
+
+  <div class="charts-grid">
+    <div class="chart-card donut-card">
+      <div class="card-head">
+        <h3>Products by category</h3>
       </div>
-      <div class="chart-container">
-        <canvas id="lineChart"></canvas>
+      <div class="chart-wrap">
+        <canvas #donutCanvas></canvas>
       </div>
     </div>
 
-    <!-- Bar chart centered below -->
-    <div class="bar-chart-wrapper">
-      <div class="chart-container">
-        <canvas id="barChart"></canvas>
+    <div class="chart-card line-card">
+      <div class="card-head">
+        <h3>Monthly revenue</h3>
+      </div>
+      <div class="chart-wrap">
+        <canvas #lineCanvas></canvas>
       </div>
     </div>
-  </mat-sidenav-content>
-</mat-sidenav-container>
+  </div>
+</section>

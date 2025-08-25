@@ -1,7 +1,8 @@
-// admin-dashboard.component.ts
-import { Component, AfterViewInit } from '@angular/core';
+// src/app/admin/admin-dashboard/admin-dashboard.component.ts
+import { Component, AfterViewInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { Chart, registerables } from 'chart.js';
 
+// register Chart.js components once
 Chart.register(...registerables);
 
 @Component({
@@ -9,43 +10,81 @@ Chart.register(...registerables);
   templateUrl: './admin-dashboard.component.html',
   styleUrls: ['./admin-dashboard.component.scss']
 })
-export class AdminDashboardComponent implements AfterViewInit {
+export class AdminDashboardComponent implements AfterViewInit, OnDestroy {
+  @ViewChild('donutCanvas', { static: false }) donutCanvas!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('lineCanvas', { static: false }) lineCanvas!: ElementRef<HTMLCanvasElement>;
+
+  private donutChart?: Chart;
+  private lineChart?: Chart;
+
+  // sample data (you can replace these with data from your service)
+  totalProducts = 24;
+  totalOrders = 128;
+  totalUsers = 46;
+  lowStock = 3;
+
+  // donut data (categories)
+  categories = ['Sneakers', 'Running', 'Casual', 'Other'];
+  categoryCounts = [12, 6, 4, 2];
+
+  // line data (monthly sales)
+  months = ['Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'];
+  monthlySales = [42000, 52000, 48000, 61000, 70000, 64000]; // numbers in paise/INR units assumed
+
+  constructor() {}
 
   ngAfterViewInit(): void {
     this.createDonutChart();
     this.createLineChart();
-    this.createBarChart();
   }
 
-  private createDonutChart(): void {
-    const ctx = document.getElementById('donutChart') as HTMLCanvasElement;
-    new Chart(ctx, {
+  ngOnDestroy(): void {
+    this.donutChart?.destroy();
+    this.lineChart?.destroy();
+  }
+
+  private createDonutChart() {
+    const ctx = this.donutCanvas.nativeElement.getContext('2d');
+    if (!ctx) return;
+
+    this.donutChart = new Chart(ctx, {
       type: 'doughnut',
       data: {
-        labels: ['Men', 'Women', 'Kids', 'Sports'],
-        datasets: [{
-          data: [300, 150, 100, 50],
-          backgroundColor: ['#f39c12', '#FFFFFF', '#C0C0C0', '#808080'],
-          borderWidth: 1,
-          borderColor: '#000000'
-        }]
+        labels: this.categories,
+        datasets: [
+          {
+            data: this.categoryCounts,
+            borderWidth: 0,
+            backgroundColor: [
+              'rgba(202,164,76,0.95)', // gold
+              'rgba(46,196,182,0.95)', // teal
+              'rgba(255,170,0,0.95)',  // amber
+              'rgba(255,255,255,0.12)' // light
+            ],
+            hoverOffset: 8
+          }
+        ]
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
+        cutout: '62%',
         plugins: {
           legend: {
             position: 'right',
             labels: {
-              color: '#FFFFFF'
+              color: '#bfc6cc',
+              boxWidth: 12,
+              padding: 12,
             }
           },
-          title: {
-            display: true,
-            text: 'Product Categories Distribution',
-            color: '#FFFFFF',
-            font: {
-              size: 16
+          tooltip: {
+            callbacks: {
+              label: (context: any) => {
+                const label = context.label ?? '';
+                const value = context.raw ?? 0;
+                return `${label}: ${value}`;
+              }
             }
           }
         }
@@ -53,90 +92,91 @@ export class AdminDashboardComponent implements AfterViewInit {
     });
   }
 
-  private createLineChart(): void {
-    const ctx = document.getElementById('lineChart') as HTMLCanvasElement;
-    new Chart(ctx, {
+  private createLineChart() {
+    const ctx = this.lineCanvas.nativeElement.getContext('2d');
+    if (!ctx) return;
+
+    // create gradient fill
+    const gradient = ctx.createLinearGradient(0, 0, 0, 220);
+    gradient.addColorStop(0, 'rgba(202,164,76,0.28)');
+    gradient.addColorStop(1, 'rgba(202,164,76,0.02)');
+
+    this.lineChart = new Chart(ctx, {
       type: 'line',
       data: {
-        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'jul' , 'Aug' , 'Sep' , 'Oct' , 'Nov' , 'Dec'],
-        datasets: [{
-          label: 'Sales Over Time',
-          data: [65, 59, 80, 81, 56, 64 , 65, 70, 80, 81, 61, 59],
-          borderColor: '#f39c12',
-          backgroundColor: 'rgba(255, 215, 0, 0.2)',
-          fill: true,
-          tension: 0.4
-        }]
+        labels: this.months,
+        datasets: [
+          {
+            label: 'Revenue (₹)',
+            data: this.monthlySales,
+            tension: 0.28,
+            borderWidth: 2,
+            pointRadius: 4,
+            pointHoverRadius: 6,
+            borderColor: 'rgba(202,164,76,0.98)',
+            backgroundColor: gradient,
+            fill: true,
+            pointBackgroundColor: '#0b0c0d'
+          }
+        ]
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
+        interaction: {
+          mode: 'index',
+          intersect: false
+        },
         scales: {
           x: {
-            ticks: { color: '#FFFFFF' },
-            grid: { color: '#333333' }
+            ticks: { color: '#bfc6cc' },
+            grid: { color: 'transparent' }
           },
           y: {
-            ticks: { color: '#FFFFFF' },
-            grid: { color: '#333333' }
+            ticks: {
+              color: '#bfc6cc',
+              callback: (value: any) => {
+                // format to rupees with thousands separator
+                const num = Number(value);
+                return '₹ ' + num.toLocaleString('en-IN');
+              }
+            },
+            grid: {
+              color: 'rgba(255,255,255,0.02)'
+            }
           }
         },
         plugins: {
-          legend: {
-            labels: { color: '#FFFFFF' }
-          },
-          title: {
-            display: true,
-            text: 'Monthly Sales Trend',
-            color: '#FFFFFF',
-            font: { size: 16 }
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: (context: any) => {
+                const val = context.raw ?? 0;
+                return `₹ ${Number(val).toLocaleString('en-IN')}`;
+              }
+            }
           }
         }
       }
     });
   }
 
-  private createBarChart(): void {
-    const ctx = document.getElementById('barChart') as HTMLCanvasElement;
-    new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: ['Q1', 'Q2', 'Q3', 'Q4'],
-        datasets: [{
-          label: 'Orders by Quarter',
-          data: [120, 190, 150, 200],
-          backgroundColor: '#f39c12',
-          borderColor: '#FFFFFF',
-          borderWidth: 1,
-          barPercentage: 0.4,
-          categoryPercentage: 0.7
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        scales: {
-          x: {
-            ticks: { color: '#FFFFFF' },
-            grid: { color: '#333333' }
-          },
-          y: {
-            ticks: { color: '#FFFFFF' },
-            grid: { color: '#333333' }
-          }
-        },
-        plugins: {
-          legend: {
-            labels: { color: '#FFFFFF' }
-          },
-          title: {
-            display: true,
-            text: 'Quarterly Orders',
-            color: '#FFFFFF',
-            font: { size: 16 }
-          }
-        }
-      }
-    });
+  // helper methods to update charts (call after changing data)
+  updateCategoryCounts(counts: number[]) {
+    this.categoryCounts = counts;
+    if (this.donutChart) {
+      this.donutChart.data.datasets![0].data = counts as any;
+      this.donutChart.update();
+    }
+  }
+
+  updateMonthlySales(sales: number[], labels?: string[]) {
+    this.monthlySales = sales;
+    if (labels) this.months = labels;
+    if (this.lineChart) {
+      this.lineChart.data.labels = this.months as any;
+      this.lineChart.data.datasets![0].data = sales as any;
+      this.lineChart.update();
+    }
   }
 }

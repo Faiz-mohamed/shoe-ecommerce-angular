@@ -1,0 +1,31 @@
+<mat-sidenav-container>
+  <mat-sidenav mode="side" opened>
+    <ul>
+      <li routerLink="/admin/dashboard">
+        <mat-icon>dashboard</mat-icon>
+        <span>Dashboard</span>
+      </li>
+      <li routerLink="/admin/products">
+        <mat-icon>shopping_bag</mat-icon>
+        <span>Products</span>
+      </li>
+      <li routerLink="/admin/orders">
+        <mat-icon>receipt_long</mat-icon>
+        <span>Orders</span>
+      </li>
+      <li routerLink="/admin/users">
+        <mat-icon>people</mat-icon>
+        <span>Users</span>
+      </li>
+      <li routerLink="/admin/settings">
+        <mat-icon>settings</mat-icon>
+        <span>Settings</span>
+      </li>
+    </ul>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+  <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>
+
