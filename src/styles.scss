@@ -99,3 +99,95 @@ html {
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+
+
+
+
+
+
+/* Put this in styles.scss (global) for best results */
+mat-sidenav-content {
+  /* basic thumb styling */
+  scrollbar-width: thin;
+  scrollbar-color: #f39c12 transparent;
+
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #f39c12;
+    border-radius: 2px;
+    min-height: 20px;
+    -webkit-appearance: none !important;
+    appearance: none !important;
+    border: none !important;
+  }
+
+  /* hide ALL scrollbar buttons (arrows) and variants */
+  &::-webkit-scrollbar-button,
+  &::-webkit-scrollbar-button:vertical,
+  &::-webkit-scrollbar-button:horizontal,
+  &::-webkit-scrollbar-button:single-button,
+  &::-webkit-scrollbar-button:start,
+  &::-webkit-scrollbar-button:end {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+    background: transparent !important;
+    -webkit-appearance: none !important;
+    appearance: none !important;
+    border: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* hide corner if present */
+  &::-webkit-scrollbar-corner {
+    background: transparent !important;
+  }
+}
+
+
+
+
+
+
+/* src/styles.scss */
+
+/* Hide the page (root) scrollbar but keep page scroll functionality */
+html.hide-page-scrollbar,
+body.hide-page-scrollbar {
+  /* Firefox */
+  scrollbar-width: none;
+  /* IE 10+ / old Edge */
+  -ms-overflow-style: none;
+}
+
+/* WebKit/Blink (Chrome, Edge, Safari) */
+html.hide-page-scrollbar::-webkit-scrollbar,
+body.hide-page-scrollbar::-webkit-scrollbar {
+  width: 0;    /* hide vertical scrollbar */
+  height: 0;   /* hide horizontal scrollbar */
+  background: transparent;
+}
+
+/* make sure thumb/track are transparent if present */
+html.hide-page-scrollbar::-webkit-scrollbar-thumb,
+body.hide-page-scrollbar::-webkit-scrollbar-thumb,
+html.hide-page-scrollbar::-webkit-scrollbar-track,
+body.hide-page-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Optional: ensure document remains scrollable (safety) */
+html,
+body {
+  /* do not set overflow: hidden here; we only hide the scrollbar visuals */
+  min-height: 100%;
+}

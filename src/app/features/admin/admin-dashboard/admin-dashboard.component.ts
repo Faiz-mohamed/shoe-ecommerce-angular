@@ -13,9 +13,11 @@ Chart.register(...registerables);
 export class AdminDashboardComponent implements AfterViewInit, OnDestroy {
   @ViewChild('donutCanvas', { static: false }) donutCanvas!: ElementRef<HTMLCanvasElement>;
   @ViewChild('lineCanvas', { static: false }) lineCanvas!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('barCanvas', { static: false }) barCanvas!: ElementRef<HTMLCanvasElement>;
 
   private donutChart?: Chart;
   private lineChart?: Chart;
+  private barChart?: Chart;
 
   // sample data (you can replace these with data from your service)
   totalProducts = 24;
@@ -31,16 +33,21 @@ export class AdminDashboardComponent implements AfterViewInit, OnDestroy {
   months = ['Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'];
   monthlySales = [42000, 52000, 48000, 61000, 70000, 64000]; // numbers in paise/INR units assumed
 
+  // bar data (monthly orders)
+  monthlyOrders = [120, 150, 140, 180, 200, 190];
+
   constructor() {}
 
   ngAfterViewInit(): void {
     this.createDonutChart();
     this.createLineChart();
+    this.createBarChart();
   }
 
   ngOnDestroy(): void {
     this.donutChart?.destroy();
     this.lineChart?.destroy();
+    this.barChart?.destroy();
   }
 
   private createDonutChart() {
@@ -153,6 +160,65 @@ export class AdminDashboardComponent implements AfterViewInit, OnDestroy {
               label: (context: any) => {
                 const val = context.raw ?? 0;
                 return `₹ ${Number(val).toLocaleString('en-IN')}`;
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+
+  private createBarChart() {
+    const ctx = this.barCanvas.nativeElement.getContext('2d');
+    if (!ctx) return;
+
+    this.barChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: this.months,
+        datasets: [
+          {
+            label: 'Orders',
+            data: this.monthlyOrders,
+            backgroundColor: 'rgba(202,164,76,0.75)',
+            borderColor: 'rgba(202,164,76,1)',
+            borderWidth: 1,
+            barThickness : 50
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: {
+          mode: 'index',
+          intersect: false
+        },
+        scales: {
+          x: {
+            ticks: { color: '#bfc6cc' },
+            grid: { color: 'transparent' }
+          },
+          y: {
+            ticks: {
+              color: '#bfc6cc',
+              callback: (value: any) => {
+                const num = Number(value);
+                return num.toLocaleString('en-IN');
+              }
+            },
+            grid: {
+              color: 'rgba(255,255,255,0.02)'
+            }
+          }
+        },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: (context: any) => {
+                const val = context.raw ?? 0;
+                return `${Number(val).toLocaleString('en-IN')} orders`;
               }
             }
           }
