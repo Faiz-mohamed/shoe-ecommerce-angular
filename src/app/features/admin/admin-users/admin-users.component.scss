@@ -1,0 +1,296 @@
+// Variables
+$bg: #0f0f0f;
+$panel: #171717;
+$text: #ffffff;
+$muted: #bdbdbd;
+$accent: #f39c12;
+$accent-opaque: rgba(243,156,18,0.12);
+$danger: #e74c3c;
+$success: #2ecc71;
+$info: #3498db;
+$radius: 10px;
+$shadow: 0 6px 18px rgba(0,0,0,0.6);
+
+.admin-users-page {
+  padding: 2rem;
+  min-height: 100vh;
+//   background: linear-gradient(180deg, $bg 0%, #000000 100%);
+  background-color: transparent;
+  color: $text;
+  font-family: Inter, Roboto, "Helvetica Neue", Arial, sans-serif;
+
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+
+    h1 {
+      margin: 0;
+      font-size: 1.6rem;
+      color: $accent;
+    }
+    .sub {
+      margin: 0;
+      color: $muted;
+      font-size: 0.95rem;
+    }
+
+    .header-actions { button { margin-left: 0.5rem; } }
+  }
+
+  // Stats
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+
+    .stat-card {
+    //   background: $panel;#f39c12
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
+      padding: 1rem;
+      border-radius: $radius;
+      box-shadow: $shadow;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+
+      .stat-title { color: $muted; font-size: 0.9rem; }
+      .stat-value { font-size: 1.5rem; font-weight: 700; color: $text; }
+    }
+  }
+
+  // Table wrapper
+  .users-table-wrapper {
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
+    padding: 0.75rem;
+    border-radius: $radius;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+
+    .users-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 720px;
+
+      thead {
+        th {
+          text-align: left;
+          padding: 0.9rem 1rem;
+          font-size: 0.85rem;
+          text-transform: uppercase;
+          letter-spacing: 0.02em;
+          background: $accent;
+          color: #0a0a0a;
+          font-weight: 700;
+        }
+      }
+
+      tbody {
+        tr {
+          transition: background 0.12s ease;
+          border-bottom: 1px solid rgba(255,255,255,0.03);
+
+          &:hover {
+            background: rgba(255,255,255,0.02);
+          }
+        }
+
+        td {
+          padding: 0.9rem 1rem;
+          vertical-align: middle;
+          font-size: 0.95rem;
+
+          .mono { font-family: "Courier New", monospace; opacity: 0.95; }
+          .link-btn {
+            background: none;
+            border: none;
+            color: $accent;
+            text-decoration: underline;
+            cursor: pointer;
+            padding: 0;
+            font-weight: 600;
+          }
+
+          .badge {
+            display: inline-block;
+            padding: 0.28rem 0.6rem;
+            border-radius: 999px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            &.active { background: $accent-opaque; color: $accent; }
+            &.inactive { background: rgba(255,255,255,0.04); color: $muted; }
+          }
+
+          .dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-left: 0.6rem;
+            background: rgba(255,255,255,0.06);
+            vertical-align: middle;
+            &.online { background: $success; box-shadow: 0 0 6px rgba(46,204,113,0.12); }
+          }
+        }
+      }
+    }
+
+    // Action menu
+    .action-wrap { position: relative;
+      .btn.small { background: rgba(255,255,255,0.03); border: 0; color: $text; padding: 0.4rem 0.55rem; border-radius: 8px; cursor: pointer; }
+      .action-menu {
+        position: absolute;
+        right: 0;
+        top: 40px;
+        background: $panel;
+        border-radius: 8px;
+        box-shadow: 0 12px 30px rgba(0,0,0,0.6);
+        min-width: 160px;
+        z-index: 20;
+        padding: 0.35rem;
+        display: flex;
+        flex-direction: column;
+
+        .menu-item {
+          background: transparent;
+          border: 0;
+          text-align: left;
+          padding: 0.6rem 0.8rem;
+          cursor: pointer;
+          color: $text;
+          font-size: 0.95rem;
+          border-radius: 6px;
+          width: 100%;
+          transition: background 0.12s ease;
+          &:hover { background: rgba(255,255,255,0.02); }
+          svg { vertical-align: middle; margin-right: 0.5rem; }
+        }
+      }
+    }
+
+    // Mobile cards fallback (hidden on large screens)
+    .users-cards { display: none; gap: 1rem; margin-top: 0.5rem;
+      .user-card {
+        background: $panel;
+        border-radius: 10px;
+        padding: 0.9rem;
+        box-shadow: $shadow;
+        display: flex;
+        flex-direction: column;
+        gap: 0.6rem;
+
+        .card-top { display:flex; justify-content:space-between; align-items:center;
+          .email { color: $muted; font-size: 0.95rem; }
+        }
+        .card-bottom { display:flex; justify-content:space-between; align-items:center;
+          .card-actions { display:flex; gap:0.5rem; align-items:center; }
+        }
+      }
+    }
+  }
+
+  // Modals
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 80;
+  }
+  .modal {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    width: min(960px, 94vw);
+    max-height: 88vh;
+    overflow: auto;
+    background: linear-gradient(180deg, #141414, #0f0f0f);
+    border-radius: 12px;
+    z-index: 90;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.7);
+    padding: 0.75rem;
+    display: flex;
+    flex-direction: column;
+
+    .modal-header { display:flex; justify-content:space-between; align-items:center; padding:0.5rem 0;
+      h2 { margin:0; color: $accent; font-size: 1.1rem; }
+      .btn.ghost { background: transparent; border: 0; color: $muted; font-size: 1.1rem; }
+    }
+
+    .modal-body { padding: 0.5rem 0; color: $muted;
+      .muted { color: $muted; }
+
+      .orders-modal-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 0.6rem;
+
+        thead th { text-align:left; padding:0.6rem; font-size:0.85rem; color:$muted; border-bottom:1px solid rgba(255,255,255,0.03); }
+        tbody td { padding:0.6rem; font-size:0.95rem; border-bottom:1px solid rgba(255,255,255,0.02); }
+
+        .status {
+          padding: 0.28rem 0.5rem;
+          border-radius: 999px;
+          font-weight:700;
+          font-size:0.8rem;
+          &.pending { color: $accent; background: rgba(243,156,18,0.08); }
+          &.shipped { color: $info; background: rgba(52,152,219,0.06); }
+          &.delivered { color: $success; background: rgba(46,204,113,0.06); }
+          &.cancelled { color: $danger; background: rgba(231,76,60,0.06); }
+        }
+      }
+
+      .user-details { display:grid; grid-template-columns: 1fr 1fr; gap: 0.6rem;
+        dt { color: $muted; font-size: 0.85rem; }
+        dd { margin: 0; color: $text; font-weight:600; }
+      }
+
+      .user-actions { margin-top: 0.8rem; display:flex; gap:0.6rem; }
+    }
+
+    .modal-footer { display:flex; justify-content:flex-end; gap:0.5rem; padding-top:0.6rem;
+      .btn { min-width: 86px; }
+    }
+  }
+
+  // Buttons
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 0.9rem;
+    border-radius: 8px;
+    border: 0;
+    cursor: pointer;
+    background: $accent;
+    color: #0a0a0a;
+    font-weight: 700;
+    transition: transform 0.08s ease, opacity 0.08s ease;
+    &.ghost { background: transparent; border: 1px solid rgba(255,255,255,0.04); color: $muted; font-weight:600; }
+    &.small { padding: 0.35rem 0.5rem; font-size: 0.9rem; border-radius: 6px; }
+  }
+
+  .link-btn { background: transparent; border: 0; color: $accent; cursor: pointer; text-decoration: underline; }
+
+  .muted { color: $muted; font-size: 0.95rem; }
+
+  // responsive
+  @media (max-width: 980px) {
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    .users-table { min-width: 640px; }
+  }
+
+  @media (max-width: 720px) {
+    padding: 1rem;
+
+    .stats-grid { grid-template-columns: 1fr; }
+
+    // hide big table and show cards
+    .users-table { display: none; }
+    .users-cards { display: grid; grid-template-columns: 1fr; }
+
+    .modal { width: 96vw; max-height: 92vh; }
+  }
+}

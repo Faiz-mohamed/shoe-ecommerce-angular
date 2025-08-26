@@ -1,1 +1,170 @@
-<p>admin-settings works!</p>
+<section class="admin-settings-page" aria-labelledby="admin-settings-title">
+  <header class="settings-header">
+    <div>
+      <h1 id="admin-settings-title">Admin Settings</h1>
+      <p class="sub">Site configuration — store, payments, security & integrations</p>
+    </div>
+
+    <div class="header-actions">
+      <button class="btn ghost small" (click)="resetToDefaults()" type="button">Reset defaults</button>
+      <button class="btn" (click)="saveSettings()" type="button">Save settings</button>
+    </div>
+  </header>
+
+  <form [formGroup]="settingsForm" class="settings-grid" (ngSubmit)="saveSettings()">
+    <!-- LEFT COLUMN: Settings sections -->
+    <div class="col left">
+      <!-- STORE -->
+      <section id="store" class="card">
+        <h2>Store</h2>
+
+        <div class="field">
+          <label>Store Name</label>
+          <input formControlName="storeName" type="text" />
+        </div>
+
+        <div class="field two">
+          <div>
+            <label>Contact Email</label>
+            <input formControlName="contactEmail" type="email" />
+          </div>
+          <div>
+            <label>Contact Phone</label>
+            <input formControlName="contactPhone" type="text" />
+          </div>
+        </div>
+
+        <div class="field upload-row">
+          <div class="upload">
+            <label class="small-label">Logo</label>
+            <div class="upload-box">
+              <input id="logoInput" type="file" accept="image/*" (change)="onFileChange($event,'logo')" />
+              <div class="upload-preview" *ngIf="logoPreview; else logoPlace">
+                <img [src]="logoPreview" alt="logo preview" />
+              </div>
+              <ng-template #logoPlace>
+                <div class="upload-placeholder">Drop or select a logo</div>
+              </ng-template>
+            </div>
+          </div>
+
+          <div class="upload">
+            <label class="small-label">Favicon</label>
+            <div class="upload-box">
+              <input id="faviconInput" type="file" accept="image/*" (change)="onFileChange($event,'favicon')" />
+              <div class="upload-preview" *ngIf="faviconPreview; else favPlace">
+                <img [src]="faviconPreview" alt="favicon preview" />
+              </div>
+              <ng-template #favPlace>
+                <div class="upload-placeholder">Select favicon</div>
+              </ng-template>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- APPEARANCE -->
+      <section id="appearance" class="card">
+        <h2>Appearance</h2>
+        <div class="field two">
+          <div>
+            <label>Dark Mode</label>
+            <div class="switch" (click)="toggleControl('darkMode')" role="switch" [attr.aria-checked]="settingsForm.get('darkMode')?.value">
+              <span class="track"><span class="thumb" [class.on]="settingsForm.get('darkMode')?.value"></span></span>
+            </div>
+          </div>
+
+          <div>
+            <label>Accent Color</label>
+            <input formControlName="accentColor" type="color" />
+          </div>
+        </div>
+      </section>
+
+      <!-- ORDERS & PAYMENTS -->
+      <section id="orders-payments" class="card">
+        <h2>Orders & Payments</h2>
+        <div class="field two">
+          <div>
+            <label>Default Currency</label>
+            <input formControlName="defaultCurrency" type="text" />
+          </div>
+          <div>
+            <label>Auto-cancel (hours)</label>
+            <input formControlName="autoCancelHours" type="number" min="0" />
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Payment Methods</label>
+          <div class="chips">
+            <button *ngFor="let pm of paymentMethods; index as i"
+                    class="chip"
+                    [class.on]="settingsForm.get('paymentMethods')?.value[i]"
+                    (click)="togglePaymentMethod(i)"
+                    type="button">
+              {{ pm.label }}
+            </button>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- RIGHT COLUMN: Security, Notifications & Integrations -->
+    <div class="col right">
+      <section id="security" class="card">
+        <h2>Security</h2>
+
+        <div class="field two">
+          <div>
+            <label>Allow Signups</label>
+            <div class="switch" (click)="toggleControl('allowSignups')" role="switch" [attr.aria-checked]="settingsForm.get('allowSignups')?.value">
+              <span class="track"><span class="thumb" [class.on]="settingsForm.get('allowSignups')?.value"></span></span>
+            </div>
+          </div>
+
+          <div>
+            <label>Session timeout (mins)</label>
+            <input formControlName="sessionTimeoutMins" type="number" min="1" />
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Maintenance Mode</label>
+          <div class="switch" (click)="toggleControl('maintenanceMode')" role="switch" [attr.aria-checked]="settingsForm.get('maintenanceMode')?.value">
+            <span class="track"><span class="thumb" [class.on]="settingsForm.get('maintenanceMode')?.value"></span></span>
+          </div>
+          <p class="muted">When enabled, the storefront is unavailable to customers.</p>
+        </div>
+      </section>
+
+      <section id="notifications" class="card">
+        <h2>Notifications</h2>
+        <div class="field">
+          <label><input type="checkbox" formControlName="notifyNewOrder" /> Notify on new orders</label>
+        </div>
+        <div class="field">
+          <label><input type="checkbox" formControlName="notifyNewUser" /> Notify on new user signup</label>
+        </div>
+      </section>
+
+      <section id="integrations" class="card">
+        <h2>Integrations</h2>
+        <div class="field">
+          <label>Analytics ID</label>
+          <input formControlName="analyticsId" type="text" placeholder="UA-XXXXX or G-XXXX" />
+        </div>
+
+        <div class="field">
+          <label>Shipping Provider</label>
+          <input formControlName="shippingProvider" type="text" placeholder="e.g. Shiprocket, FedEx" />
+        </div>
+
+        <div class="field">
+          <label>Backup schedule (days)</label>
+          <input formControlName="backupScheduleDays" type="number" min="1" />
+        </div>
+      </section>
+    </div>
+  </form>
+</section>

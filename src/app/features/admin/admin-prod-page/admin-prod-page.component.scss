@@ -1,21 +1,20 @@
 /* ==========================================
    Admin Products Page SCSS
-   Description: Styles for admin products page 
-   including header, cards, table, forms, buttons, 
-   modals, and responsive layout.
+   Description: Admin products page with live
+   image preview for modal, tables, forms,
+   buttons, responsive layout
    ========================================== */
 
 /* ==========================
-   Color & Layout Tokens
+   Color Tokens
    ========================== */
 $bg: #0f1113;
-$card-bg: #0b0c0d;
 $panel-bg: #0f1213;
 $text: #e9ecef;
 $muted: #bfc6cc;
-$accent: #caa44c; // gold
+$accent: #caa44c;
 $danger: #e14b4b;
-$glass: rgba(255, 255, 255, 0.03);
+$glass: rgba(255,255,255,0.03);
 
 /* ==========================
    Base Styles
@@ -50,8 +49,8 @@ html, body {
   margin-bottom: 18px;
 
   .ap-title {
-    h1 { margin: 0; font-size: 20px; letter-spacing: -0.2px; color: white; }
-    .muted { color: $muted; margin-top: 4px; font-size: 13px; }
+    h1 { margin:0; font-size:20px; color:white; }
+    .muted { color:$muted; margin-top:4px; font-size:13px; }
   }
 
   .ap-actions {
@@ -60,59 +59,50 @@ html, body {
     align-items: center;
 
     .filter-row {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-
-      .select, .search { min-width: 180px; }
-      .search { width: 220px; }
+      display:flex; gap:8px; align-items:center;
+      .select, .search { min-width:180px; }
+      .search { width:220px; }
     }
   }
 }
 
 /* ==========================
-   Summary Cards
+   Cards
    ========================== */
 .cards {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 18px;
-
+  display:flex; gap:12px; margin-bottom:18px;
   .card {
     background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
-    border-radius: 8px;
-    padding: 12px 16px;
-    min-width: 120px;
-    box-shadow: 0 1px 0 rgba(255,255,255,0.02);
-    border: 1px solid rgba(255,255,255,0.03);
-
-    .card-title { font-size: 12px; color: $muted; }
-    .card-value { font-size: 18px; font-weight: 600; margin-top: 6px; color: $text; }
+    border-radius:8px;
+    padding:12px 16px;
+    min-width:120px;
+    border:1px solid rgba(255,255,255,0.03);
+    .card-title { font-size:12px; color:$muted; }
+    .card-value { font-size:18px; font-weight:600; margin-top:6px; color:$text; }
   }
 }
 
 /* ==========================
-   Product Table
+   Table
    ========================== */
 .table-wrap {
-  background: $panel-bg;
-  border-radius: 10px;
-  padding: 14px;
-  border: 1px solid rgba(255,255,255,0.03);
-  box-shadow: 0 6px 18px rgba(0,0,0,0.6);
+  background:$panel-bg;
+  border-radius:10px;
+  padding:14px;
+  border:1px solid rgba(255,255,255,0.03);
 }
 
 .product-table {
-  width: 100%;
-  border-collapse: collapse;
-  color: $text;
+  width:100%;
+  border-collapse:collapse;
+  color:$text;
 
   thead th {
-    text-align: left;
-    font-size: 12px;
-    color: $muted;
-    padding: 12px 10px;
-    border-bottom: 1px solid rgba(255,255,255,0.03);
+    text-align:left;
+    font-size:12px;
+    color:$muted;
+    padding:12px 10px;
+    border-bottom:1px solid rgba(255,255,255,0.03);
   }
 
   tbody tr {
@@ -120,65 +110,45 @@ html, body {
     &:hover { background: rgba(255,255,255,0.02); }
 
     td {
-      padding: 12px 10px;
+      padding:12px 10px;
       vertical-align: middle;
-      border-bottom: 1px dashed rgba(255,255,255,0.02);
+      border-bottom:1px dashed rgba(255,255,255,0.02);
     }
   }
 
-  /* Product Cell */
   .cell-product {
-    display: flex;
-    gap: 12px;
-    align-items: center;
-
+    display:flex; gap:12px; align-items:center;
     .thumb {
-      width: 60px;
-      height: 60px;
-      object-fit: cover;
-      border-radius: 8px;
-      border: 1px solid rgba(255,255,255,0.03);
-      background: $glass;
+      width:60px;
+      height:60px;
+      object-fit:cover;
+      border-radius:8px;
+      border:1px solid rgba(255,255,255,0.03);
+      background:$glass;
     }
-
     .meta {
-      .name { font-weight: 600; }
-      .small { font-size: 12px; color: $muted; margin-top: 4px; }
+      .name { font-weight:600; }
+      .small { font-size:12px; color:$muted; margin-top:4px; }
     }
   }
 
-  .col-actions { width: 120px; text-align: right; }
+  .col-actions { width:120px; text-align:right; }
 
-  /* Stock Indicator */
   .stock {
-    display: inline-block;
-    padding: 6px 10px;
-    border-radius: 999px;
-    font-weight: 600;
-    font-size: 13px;
-
-    &.in-stock { background: rgba(46,196,182,0.06); color: #2ec4b6; }
-    &.low { background: rgba(255,170,0,0.06); color: #f39c12; }
-    &.out { background: rgba(225,75,75,0.06); color: $danger; }
+    display:inline-block; padding:6px 10px; border-radius:999px; font-weight:600; font-size:13px;
+    &.in-stock { background: rgba(46,196,182,0.06); color:#2ec4b6; }
+    &.low { background: rgba(255,170,0,0.06); color:#f39c12; }
+    &.out { background: rgba(225,75,75,0.06); color:$danger; }
   }
 
-  /* Action Buttons */
   .icon-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 36px;
-    height: 36px;
-    border-radius: 8px;
-    border: 1px solid rgba(255,255,255,0.03);
-    background: transparent;
-    color: $muted;
-    cursor: pointer;
-    margin-left: 8px;
+    display:inline-flex; align-items:center; justify-content:center;
+    min-width:36px; height:36px; border-radius:8px; border:1px solid rgba(255,255,255,0.03);
+    background:transparent; color:$muted; cursor:pointer; margin-left:8px;
     transition: transform .08s ease, background .08s ease;
 
-    &:hover { transform: translateY(-1px); color: $text; background: rgba(255,255,255,0.02); }
-    &.danger { border-color: rgba(225,75,75,0.12); color: $danger; }
+    &:hover { transform: translateY(-1px); color:$text; background: rgba(255,255,255,0.02); }
+    &.danger { border-color: rgba(225,75,75,0.12); color:$danger; }
   }
 }
 
@@ -186,116 +156,139 @@ html, body {
    Forms & Inputs
    ========================== */
 .input, .select, .textarea {
-  width: 100%;
-  padding: 10px 12px;
-  border-radius: 8px;
-  border: 1px solid rgba(255,255,255,0.04);
+  width:100%;
+  padding:10px 12px;
+  border-radius:8px;
+  border:1px solid rgba(255,255,255,0.04);
   background: rgba(255,255,255,0.02);
-  color: $text;
-  font-size: 13px;
-  outline: none;
-
-  &:focus { box-shadow: 0 4px 18px rgba($accent, 0.06); border-color: rgba($accent, 0.18); }
+  color:$text;
+  font-size:13px;
+  outline:none;
+  &:focus { box-shadow: 0 4px 18px rgba($accent,0.06); border-color: rgba($accent,0.18); }
 }
 
-.textarea { resize: vertical; min-height: 80px; }
-
-.label { display: block; color: $muted; margin-bottom: 6px; font-size: 13px; }
+.textarea { resize: vertical; min-height:80px; }
+.label { display:block; color:$muted; margin-bottom:6px; font-size:13px; }
 
 .form-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
+  display:grid;
+  grid-template-columns:repeat(2, minmax(0,1fr));
+  gap:12px;
+  label.full { grid-column:1/-1; }
+}
 
-  label.full { grid-column: 1 / -1; }
+/* Image URL + live preview */
+.image-url-group {
+  display:flex; gap:12px; align-items:center;
+  input.input { flex:1; }
+  .image-preview {
+    width:120px; height:80px; flex-shrink:0;
+    border-radius:8px; border:1px solid rgba(255,255,255,0.08);
+    background:$glass; display:flex; align-items:center; justify-content:center; overflow:hidden;
+    img { max-width:100%; max-height:100%; object-fit:contain; }
+  }
 }
 
 /* ==========================
    Buttons
    ========================== */
 .btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 14px;
-  border-radius: 10px;
-  border: 1px solid rgba(255,255,255,0.04);
-  cursor: pointer;
-  background: transparent;
-  color: $text;
-  font-weight: 600;
+  display:inline-flex; align-items:center; gap:8px; padding:10px 14px; border-radius:10px;
+  border:1px solid rgba(255,255,255,0.04); cursor:pointer; background:transparent; color:$text; font-weight:600;
 
   &.btn-primary {
-    background: linear-gradient(180deg, rgba($accent,0.18), rgba($accent,0.10));
-    color: #f39c12;
-    border: none;
-    &:hover { background: #f39c12; color: #fff; transform: translateY(-1px); }
-    &:active { transform: translateY(0); opacity: 0.9; }
+    background:linear-gradient(180deg, rgba($accent,0.18), rgba($accent,0.10));
+    color:#f39c12; border:none;
+    &:hover { background:#f39c12; color:#fff; transform:translateY(-1px); }
+    &:active { transform:translateY(0); opacity:0.9; }
   }
 
-  &.btn-muted { background: rgba(255,255,255,0.02); color: $muted; }
-  &.danger { background: rgba(225,75,75,0.09); color: $danger; border: none; }
+  &.btn-muted { background: rgba(255,255,255,0.02); color:$muted; }
+  &.danger { background: rgba(225,75,75,0.09); color:$danger; border:none; }
 }
 
 /* ==========================
    Modals
    ========================== */
 .modal {
-  position: fixed;
-  inset: 0;
-  z-index: 1000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  position:fixed; inset:0; z-index:1000;
+  display:flex; align-items:center; justify-content:center;
 
-  #modalTitle {
-  color: #f39c12;  // gold color for Add/Edit modal title
-  }
+  #modalTitle { color:#f39c12; }
 
-  .modal-backdrop { position: absolute; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(2px); }
-
-  .modal-panel-wrapper { position: relative; z-index: 2; max-width: 600px; width: 90%; margin: 0 20px; }
-
+  .modal-backdrop { position:absolute; inset:0; background: rgba(0,0,0,0.5); backdrop-filter:blur(2px); }
+  .modal-panel-wrapper { position:relative; z-index:2; max-width:600px; width:90%; margin:0 20px; }
   .modal-panel {
-    background-color: $panel-bg;
-    border-radius: 12px;
-    padding: 18px;
-    border: 1px solid rgba(255,255,255,0.04);
-    box-shadow: 0 16px 50px rgba(0,0,0,0.6);
-    animation: fadeIn 0.2s ease-out;
+    background:$panel-bg; border-radius:12px; padding:18px; border:1px solid rgba(255,255,255,0.04);
+    box-shadow:0 16px 50px rgba(0,0,0,0.6); animation:fadeIn 0.2s ease-out;
+    &.small{ max-width:420px; }
 
-    &.small { max-width: 420px; }
+    .modal-header, .modal-footer { display:flex; align-items:center; justify-content:space-between; }
+    .modal-header { margin-bottom:10px; }
+    .modal-footer { gap:10px; justify-content:flex-end; margin-top:8px; }
+    .close { background:transparent; border:none; color:$muted; font-size:18px; cursor:pointer; }
+    .modal-body { padding:12px 0; color:$muted; }
   }
-
-  .modal-header, .modal-footer { display: flex; align-items: center; justify-content: space-between; }
-  .modal-header { margin-bottom: 10px; }
-  .modal-footer { gap: 10px; justify-content: flex-end; margin-top: 8px; }
-  .close { background: transparent; border: none; color: $muted; font-size: 18px; cursor: pointer; }
-
-  .modal-body { padding: 12px 0; color: $muted; }
 }
 
 /* ==========================
-   Utilities & Helpers
+   Utilities
    ========================== */
-.muted { color: $muted; }
-.small { font-size: 12px; }
-.sr-only { position: absolute; left: -9999px; top: auto; width: 1px; height: 1px; overflow: hidden; }
+.muted { color:$muted; }
+.small { font-size:12px; }
+.sr-only { position:absolute; left:-9999px; top:auto; width:1px; height:1px; overflow:hidden; }
 
 /* ==========================
    Responsive
    ========================== */
-@media (max-width: 880px) {
-  .form-grid { grid-template-columns: 1fr; }
-  .cards { flex-direction: column; }
-  .ap-header { flex-direction: column; align-items: flex-start; gap: 12px; }
-  .product-table .col-actions { text-align: left; }
+@media (max-width:880px) {
+  .form-grid { grid-template-columns:1fr; }
+  .cards { flex-direction:column; }
+  .ap-header { flex-direction:column; align-items:flex-start; gap:12px; }
+  .product-table .col-actions { text-align:left; }
+  .image-url-group { flex-direction:column; .image-preview { width:100%; height:180px; } }
 }
 
 /* ==========================
    Animations
    ========================== */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from { opacity:0; transform:translateY(-10px); }
+  to { opacity:1; transform:translateY(0); }
+}
+
+
+
+/* Styled Select Dropdown */
+.select {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.02);
+  color: #e9ecef;
+  font-size: 13px;
+  font-family: inherit;
+  appearance: none;        /* removes default arrow */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,<svg width='12' height='12' xmlns='http://www.w3.org/2000/svg'><path d='M2 4l4 4 4-4' stroke='%23bfc6cc' stroke-width='2' fill='none' stroke-linecap='round'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 12px;
+  cursor: pointer;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.select:focus {
+  outline: none;
+  border-color: rgba(202, 164, 76, 0.5); /* accent */
+  box-shadow: 0 4px 18px rgba(202, 164, 76, 0.08);
+}
+
+/* Dropdown options */
+.select option {
+  background: #0f1213;
+  color: #e9ecef;
+  padding: 8px;
 }

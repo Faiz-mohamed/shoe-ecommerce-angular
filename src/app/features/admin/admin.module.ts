@@ -18,7 +18,7 @@ import { AdminSettingsComponent } from './admin-settings/admin-settings.componen
 import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
 import { RouterModule } from '@angular/router';
 import { AdminPageComponent } from './admin-page/admin.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -32,6 +32,7 @@ import { FormsModule } from '@angular/forms';
   imports: [
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
     RouterModule,
     AdminRoutingModule,
     MatToolbarModule,

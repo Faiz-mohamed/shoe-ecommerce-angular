@@ -1,0 +1,113 @@
+.admin-orders-page {
+  padding: 2rem;
+  color: #fff;
+  background-color: #12121200;
+  min-height: 100vh;
+
+  .orders-header {
+    margin-bottom: 1.5rem;
+
+    h1 {
+      font-size: 2rem;
+      font-weight: 600;
+      color: #f39c12;
+    }
+
+    .muted {
+      color: #aaa;
+      font-size: 0.95rem;
+    }
+  }
+
+  .orders-table-wrapper {
+    overflow-x: auto;
+    border-radius: 10px;
+    background: #1e1e1e;
+    padding: 1rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+  }
+
+  .orders-table {
+    width: 100%;
+    border-collapse: collapse;
+
+    th, td {
+      text-align: left;
+      padding: 0.9rem 1rem;
+    }
+
+    thead {
+      background-color: goldenrod;
+      color: #121212;
+
+      th {
+        font-weight: 600;
+        font-size: 0.95rem;
+        text-transform: uppercase;
+      }
+    }
+
+    tbody {
+      tr {
+        border-bottom: 1px solid #2c2c2c;
+
+        &:hover {
+          background-color: #2a2a2a;
+        }
+      }
+
+      td {
+        font-size: 0.95rem;
+
+        .details-link {
+          color: #f39c12;
+          font-weight: 500;
+          text-decoration: none;
+
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+
+        .status {
+          padding: 0.3rem 0.7rem;
+          border-radius: 20px;
+          font-size: 0.85rem;
+          font-weight: 600;
+          text-transform: capitalize;
+
+          &.pending {
+            background: rgba(243, 156, 18, 0.15);
+            color: #f39c12;
+          }
+
+          &.shipped {
+            background: rgba(52, 152, 219, 0.15);
+            color: #3498db;
+          }
+
+          &.delivered {
+            background: rgba(46, 204, 113, 0.15);
+            color: #2ecc71;
+          }
+
+          &.cancelled {
+            background: rgba(231, 76, 60, 0.15);
+            color: #e74c3c;
+          }
+        }
+      }
+    }
+  }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .orders-table {
+      font-size: 0.85rem;
+
+      th, td {
+        padding: 0.6rem;
+      }
+    }
+  }
+}

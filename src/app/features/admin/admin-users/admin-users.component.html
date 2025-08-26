@@ -1,1 +1,203 @@
-<p>admin-users works!</p>
+<section class="admin-users-page">
+  <header class="page-header">
+    <div>
+      <h1>User Management</h1>
+      <p class="sub">Overview of users and quick actions</p>
+    </div>
+    <div class="header-actions">
+      <!-- future: search, filters -->
+      <button class="btn small ghost" aria-label="Add user">+ Add user</button>
+    </div>
+  </header>
+
+  <!-- Stats -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-title">Total Users</div>
+      <div class="stat-value">{{ totalUsers }}</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-title">Online</div>
+      <div class="stat-value">{{ onlineUsers }}</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-title">Offline</div>
+      <div class="stat-value">{{ offlineUsers }}</div>
+    </div>
+  </div>
+
+  <!-- Users list / table -->
+  <div class="users-table-wrapper">
+    <!-- Desktop table -->
+    <table class="users-table" role="table" aria-label="Users table">
+      <thead>
+        <tr>
+          <th>User ID</th>
+          <th>Email</th>
+          <th>Status</th>
+          <th>Orders</th>
+          <th class="col-actions">Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let user of users; trackBy: trackByUserId">
+          <td class="mono">{{ user.id }}</td>
+          <td>{{ user.email }}</td>
+          <td>
+            <span class="badge" [ngClass]="{ 'active': user.active, 'inactive': !user.active }">
+              {{ user.active ? 'Active' : 'Inactive' }}
+            </span>
+            <span class="dot" [title]="user.online ? 'Online' : 'Offline'" [class.online]="user.online"></span>
+          </td>
+          <td>
+            <button class="link-btn" (click)="openOrdersModal(user)">View ({{ user.orders.length }})</button>
+          </td>
+          <td class="col-actions">
+            <div class="action-wrap">
+              <!-- fixed: use attr. binding for aria-expanded -->
+              <button class="btn small"
+                      (click)="toggleActionMenu(user.id)"
+                      aria-haspopup="true"
+                      [attr.aria-expanded]="actionMenuOpenFor === user.id">
+                ⋯
+              </button>
+
+              <div class="action-menu" *ngIf="actionMenuOpenFor === user.id" role="menu">
+                <button class="menu-item" (click)="toggleSuspend(user)">
+                  {{ user.active ? 'Suspend' : 'Unsuspend' }}
+                </button>
+                <button class="menu-item" (click)="openOrdersModal(user)">View Orders</button>
+                <button class="menu-item" (click)="openUserModal(user)">
+                  <!-- eye icon -->
+                  <svg class="icon-eye" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+                    <path fill="currentColor" d="M12 5c-7 0-11 6-11 7s4 7 11 7 11-6 11-7-4-7-11-7zm0 12a5 5 0 110-10 5 5 0 010 10z"/>
+                    <circle cx="12" cy="12" r="2.5" fill="currentColor"></circle>
+                  </svg>
+                  View Details
+                </button>
+              </div>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Mobile card fallback -->
+    <div class="users-cards" *ngIf="users.length">
+      <article class="user-card" *ngFor="let user of users; trackBy: trackByUserId">
+        <div class="card-top">
+          <div>
+            <div class="mono">{{ user.id }}</div>
+            <div class="email">{{ user.email }}</div>
+          </div>
+          <div class="right">
+            <span class="badge" [ngClass]="{ 'active': user.active, 'inactive': !user.active }">{{ user.active ? 'Active' : 'Inactive' }}</span>
+            <div class="dot" [class.online]="user.online" title="{{ user.online ? 'Online' : 'Offline' }}"></div>
+          </div>
+        </div>
+
+        <div class="card-bottom">
+          <div class="orders-count">Orders: <strong>{{ user.orders.length }}</strong></div>
+          <div class="card-actions">
+            <button class="link-btn" (click)="openOrdersModal(user)">View orders</button>
+            <button class="btn small" (click)="openUserModal(user)">
+              <svg class="icon-eye" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+                <path fill="currentColor" d="M12 5c-7 0-11 6-11 7s4 7 11 7 11-6 11-7-4-7-11-7zm0 12a5 5 0 110-10 5 5 0 010 10z"/>
+                <circle cx="12" cy="12" r="2.5" fill="currentColor"></circle>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+
+  <!-- Orders Modal -->
+  <div class="modal-backdrop" *ngIf="ordersModalOpen" (click)="closeModals()" aria-hidden="true"></div>
+  <div class="modal" *ngIf="ordersModalOpen" role="dialog" aria-modal="true" aria-labelledby="orders-modal-title">
+    <header class="modal-header">
+      <h2 id="orders-modal-title">Orders — {{ selectedUserForOrders?.id }}</h2>
+      <button class="btn ghost small" (click)="closeModals()" aria-label="Close">✕</button>
+    </header>
+
+    <div class="modal-body">
+      <p class="muted">User: <strong>{{ selectedUserForOrders?.email }}</strong></p>
+
+      <table class="orders-modal-table" *ngIf="selectedUserForOrders?.orders?.length; else noOrders">
+        <thead>
+          <tr>
+            <th>Order</th>
+            <th>Date</th>
+            <th>Total</th>
+            <th>Status</th>
+            <th>SKU</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let o of selectedUserForOrders!.orders">
+            <td class="mono">{{ o.id }}</td>
+            <td>{{ o.date }}</td>
+            <td>{{ formatCurrency(o.total) }}</td>
+            <td><span class="status small" [ngClass]="o.status">{{ o.status }}</span></td>
+            <td class="mono">{{ o.sku || '—' }}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <ng-template #noOrders>
+        <p class="muted">No orders found for this user.</p>
+      </ng-template>
+    </div>
+
+    <footer class="modal-footer">
+      <button class="btn" (click)="closeModals()">Close</button>
+    </footer>
+  </div>
+
+  <!-- User Details Modal -->
+  <div class="modal-backdrop" *ngIf="userModalOpen" (click)="closeModals()" aria-hidden="true"></div>
+  <div class="modal" *ngIf="userModalOpen" role="dialog" aria-modal="true" aria-labelledby="user-modal-title">
+    <header class="modal-header">
+      <h2 id="user-modal-title">User Details — {{ selectedUserForDetails?.id }}</h2>
+      <button class="btn ghost small" (click)="closeModals()" aria-label="Close">✕</button>
+    </header>
+
+    <div class="modal-body">
+      <dl class="user-details">
+        <div>
+          <dt>Email</dt>
+          <dd>{{ selectedUserForDetails?.email }}</dd>
+        </div>
+        <div>
+          <dt>Account Status</dt>
+          <dd><span class="badge" [ngClass]="{ 'active': selectedUserForDetails?.active, 'inactive': !selectedUserForDetails?.active }">{{ selectedUserForDetails?.active ? 'Active' : 'Inactive' }}</span></dd>
+        </div>
+        <div>
+          <dt>Online</dt>
+          <dd>{{ selectedUserForDetails?.online ? 'Yes' : 'No' }}</dd>
+        </div>
+        <div>
+          <dt>Created</dt>
+          <dd>{{ selectedUserForDetails?.createdAt }}</dd>
+        </div>
+        <div>
+          <dt>Orders</dt>
+          <!-- fixed: guard the orders array too -->
+          <dd>{{ selectedUserForDetails?.orders?.length }}</dd>
+        </div>
+      </dl>
+
+      <div class="user-actions">
+        <button class="btn" (click)="toggleSuspend(selectedUserForDetails!)">{{ selectedUserForDetails?.active ? 'Suspend' : 'Unsuspend' }}</button>
+        <button class="btn ghost" (click)="openOrdersModal(selectedUserForDetails!)">View Orders</button>
+      </div>
+    </div>
+
+    <footer class="modal-footer">
+      <button class="btn" (click)="closeModals()">Close</button>
+    </footer>
+  </div>
+</section>

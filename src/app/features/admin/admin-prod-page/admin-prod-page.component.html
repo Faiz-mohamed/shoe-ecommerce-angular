@@ -10,9 +10,10 @@
         <label class="sr-only" for="categoryFilter">Category</label>
         <select id="categoryFilter" #categoryFilter class="select" (change)="filterCategory(categoryFilter.value)">
           <option value="all">All categories</option>
-          <option value="sneakers">Man</option>
-          <option value="running">Women</option>
-          <option value="casual">Sports</option>
+          <option value="Men">Men</option>
+          <option value="Women">Women</option>
+          <option value="Kids">Kids</option>
+          <option value="sports">sports</option>
         </select>
 
         <input #searchBox type="search" placeholder="Search products" class="input search" (input)="searchProducts(searchBox.value)" />
@@ -85,61 +86,75 @@
   </main>
 
   <!-- Add / Edit Modal -->
-  <div class="modal" *ngIf="modalOpen">
-    <div class="modal-backdrop" (click)="closeModal()"></div>
-    <div class="modal-panel-wrapper">
-      <form class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modalTitle" (ngSubmit)="saveProduct()">
-        <header class="modal-header">
-          <h2 id="modalTitle">{{ isEditMode ? 'Edit product' : 'Add product' }}</h2>
-          <button type="button" class="close" (click)="closeModal()">✕</button>
-        </header>
+  <!-- Add / Edit Modal -->
+<div class="modal" *ngIf="modalOpen">
+  <div class="modal-backdrop" (click)="closeModal()"></div>
+  <div class="modal-panel-wrapper">
+    <form class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modalTitle" (ngSubmit)="saveProduct()">
+      
+      <header class="modal-header">
+        <h2 id="modalTitle">{{ isEditMode ? 'Edit product' : 'Add product' }}</h2>
+        <button type="button" class="close" (click)="closeModal()">✕</button>
+      </header>
 
-        <div class="modal-body">
-          <div class="form-grid">
-            <label>
-              <span class="label">Name</span>
-              <input name="name" required class="input" placeholder="Product name" [(ngModel)]="selectedProduct.name" />
-            </label>
+      <div class="modal-body">
+        <div class="form-grid">
+          <label>
+            <span class="label">Name</span>
+            <input name="name" required class="input" placeholder="Product name" [(ngModel)]="selectedProduct.name" />
+          </label>
 
-            <label>
-              <span class="label">Category</span>
-              <select name="category" class="select" required [(ngModel)]="selectedProduct.category">
-                <option value="">Select</option>
-                <option value="sneakers">Sneakers</option>
-                <option value="running">Running</option>
-                <option value="casual">Casual</option>
-              </select>
-            </label>
+          <label>
+            <span class="label">Category</span>
+            <select name="category" class="select" required [(ngModel)]="selectedProduct.category">
+              <option value="">Select</option>
+              <option value="Men">Men</option>
+              <option value="Women">Women</option>
+              <option value="Kids">Kids</option>
+              <option value="sports">sports</option>
+            </select>
+          </label>
 
-            <label>
-              <span class="label">Price (₹)</span>
-              <input name="price" type="number" min="0" class="input" required [(ngModel)]="selectedProduct.price" />
-            </label>
+          <label>
+            <span class="label">Price (₹)</span>
+            <input name="price" type="number" min="0" class="input" required [(ngModel)]="selectedProduct.price" />
+          </label>
 
-            <label>
-              <span class="label">Stock</span>
-              <input name="stock" type="number" min="0" class="input" required [(ngModel)]="selectedProduct.stock" />
-            </label>
+          <label>
+            <span class="label">Stock</span>
+            <input name="stock" type="number" min="0" class="input" required [(ngModel)]="selectedProduct.stock" />
+          </label>
 
-            <label class="full">
+          <!-- Image URL input + live preview aligned horizontally -->
+          <label class="full">
+            <!-- <span class="label">Image URL</span> -->
+            <div class="image-url-group">
               <span class="label">Image URL</span>
               <input name="image" class="input" placeholder="https://example.com/image.jpg" [(ngModel)]="selectedProduct.image" />
-            </label>
+              <div class="image-preview">
+                <img *ngIf="selectedProduct.image" [src]="selectedProduct.image" alt="Preview" />
+              </div>
+            </div>
+          </label>
 
-            <label class="full">
-              <span class="label">Description</span>
-              <textarea name="description" rows="3" class="textarea" placeholder="Short product description" [(ngModel)]="selectedProduct.description"></textarea>
-            </label>
-          </div>
+          <label class="full">
+            <span class="label">Description</span>
+            <textarea name="description" rows="3" class="textarea" placeholder="Short product description" [(ngModel)]="selectedProduct.description"></textarea>
+          </label>
         </div>
+      </div>
 
-        <footer class="modal-footer">
-          <button type="button" class="btn btn-muted" (click)="closeModal()">Cancel</button>
-          <button type="submit" class="btn btn-primary">Save product</button>
-        </footer>
-      </form>
-    </div>
+      <footer class="modal-footer">
+        <button type="button" class="btn btn-muted" (click)="closeModal()">Cancel</button>
+        <button type="submit" class="btn btn-primary">Save product</button>
+      </footer>
+
+    </form>
   </div>
+</div>
+
+
+
 
   <!-- Delete Modal -->
   <div class="modal" *ngIf="deleteTarget">
