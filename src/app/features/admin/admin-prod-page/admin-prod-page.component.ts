@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import Swal from 'sweetalert2';
 
 interface Product {
   id: number;
@@ -22,8 +23,6 @@ export class AdminProdPageComponent implements OnInit {
   selectedProduct: Product = this.emptyProduct();
   isEditMode = false;
   modalOpen = false;
-
-  deleteTarget: Product | null = null;
 
   filterCategoryValue = 'all';
   searchQuery = '';
@@ -132,21 +131,33 @@ export class AdminProdPageComponent implements OnInit {
     this.closeModal();
   }
 
-  promptDelete(product: Product) {
-    this.deleteTarget = product;
-  }
+  // ---------- replaced modal delete flow with SweetAlert2 ----------
+  deleteProduct(product: Product) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: `Do you want to delete "${product.name}"? This action cannot be undone!`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Delete',
+      cancelButtonText: 'Cancel',
+      customClass: {
+      popup: 'custom-swal'   // apply your custom class
+      },
+      // optional: focus cancel to avoid accidental deletion
+      focusCancel: true
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // perform deletion
+        this.products = this.products.filter(p => p.id !== product.id);
+        this.saveProducts();
+        this.applyFilters();
 
-  cancelDelete() {
-    this.deleteTarget = null;
+        // Note: user said they'll use Toastr — if you want to show toastr here, inject it and call it.
+        // e.g. this.toastr.success(`${product.name} deleted`, 'Deleted');
+      }
+    });
   }
-
-  confirmDelete() {
-    if (!this.deleteTarget) return;
-    this.products = this.products.filter(p => p.id !== this.deleteTarget!.id);
-    this.saveProducts();
-    this.applyFilters();
-    this.deleteTarget = null;
-  }
+  // ----------------------------------------------------------------
 
   closeModal() {
     this.modalOpen = false;

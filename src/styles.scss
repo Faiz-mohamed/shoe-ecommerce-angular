@@ -191,3 +191,40 @@ body {
   /* do not set overflow: hidden here; we only hide the scrollbar visuals */
   min-height: 100%;
 }
+
+
+/* SweetAlert2 custom dark theme */
+.custom-swal {
+  background-color: #1e1e1e !important;   /* dark background */
+  color: #ffffff !important;
+  border-radius: 12px !important;
+  font-family: 'Arial', sans-serif;
+
+  .swal2-title {
+    color: #f39c12 !important;           /* accent title */
+  }
+
+  .swal2-content {
+    color: #ffffff !important;           /* white text */
+  }
+
+  /* Confirm (Delete) button */
+  .swal2-confirm {
+    background-color: #e74c3c !important; /* red */
+    color: #fff !important;
+    font-weight: bold;
+  }
+
+  /* Cancel button */
+  .swal2-cancel {
+    background-color: #3498db !important; /* info blue */
+    color: #fff !important;
+    font-weight: bold;
+  }
+
+  .swal2-popup {
+    box-shadow: 0 0 20px rgba(0,0,0,0.6) !important;
+  }
+}
+
+body.swal2-shown { padding-right: 0 !important; }

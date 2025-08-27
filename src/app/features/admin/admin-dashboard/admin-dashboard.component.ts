@@ -1,6 +1,9 @@
 // src/app/admin/admin-dashboard/admin-dashboard.component.ts
 import { Component, AfterViewInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { Chart, registerables } from 'chart.js';
+import Swal from 'sweetalert2';
+
+
 
 // register Chart.js components once
 Chart.register(...registerables);
@@ -26,15 +29,15 @@ export class AdminDashboardComponent implements AfterViewInit, OnDestroy {
   lowStock = 3;
 
   // donut data (categories)
-  categories = ['Sneakers', 'Running', 'Casual', 'Other'];
+  categories = ['Men', 'Women', 'Kids', 'Other'];
   categoryCounts = [12, 6, 4, 2];
 
   // line data (monthly sales)
-  months = ['Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'];
-  monthlySales = [42000, 52000, 48000, 61000, 70000, 64000]; // numbers in paise/INR units assumed
+  months = [ 'Jan' , 'Feb' ,'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug' , 'Sep' , 'Oct' , 'Nov' , 'Dec'];
+  monthlySales = [42000, 61000, 70000, 64000, 48000, 61000, 59000, 52000, 48000, 61000, 70000, 64000,]; // numbers in paise/INR units assumed
 
   // bar data (monthly orders)
-  monthlyOrders = [120, 150, 140, 180, 200, 190];
+  monthlyOrders = [120, 150, 140, 180, 200, 190 , 120, 150, 140, 180, 200, 190];
 
   constructor() {}
 
@@ -183,7 +186,7 @@ export class AdminDashboardComponent implements AfterViewInit, OnDestroy {
             backgroundColor: 'rgba(202,164,76,0.75)',
             borderColor: 'rgba(202,164,76,1)',
             borderWidth: 1,
-            barThickness : 50
+            maxBarThickness : 50
           }
         ]
       },

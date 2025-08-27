@@ -73,7 +73,8 @@
             </td>
             <td class="col-actions">
               <button class="icon-btn" title="Edit" (click)="openEdit(product)">✎</button>
-              <button class="icon-btn danger" title="Delete" (click)="promptDelete(product)">🗑</button>
+              <!-- updated: call deleteProduct which uses SweetAlert2 -->
+              <button class="icon-btn danger" title="Delete" (click)="deleteProduct(product)">🗑</button>
             </td>
           </tr>
 
@@ -85,94 +86,69 @@
     </div>
   </main>
 
-  <!-- Add / Edit Modal -->
-  <!-- Add / Edit Modal -->
-<div class="modal" *ngIf="modalOpen">
-  <div class="modal-backdrop" (click)="closeModal()"></div>
-  <div class="modal-panel-wrapper">
-    <form class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modalTitle" (ngSubmit)="saveProduct()">
-      
-      <header class="modal-header">
-        <h2 id="modalTitle">{{ isEditMode ? 'Edit product' : 'Add product' }}</h2>
-        <button type="button" class="close" (click)="closeModal()">✕</button>
-      </header>
-
-      <div class="modal-body">
-        <div class="form-grid">
-          <label>
-            <span class="label">Name</span>
-            <input name="name" required class="input" placeholder="Product name" [(ngModel)]="selectedProduct.name" />
-          </label>
-
-          <label>
-            <span class="label">Category</span>
-            <select name="category" class="select" required [(ngModel)]="selectedProduct.category">
-              <option value="">Select</option>
-              <option value="Men">Men</option>
-              <option value="Women">Women</option>
-              <option value="Kids">Kids</option>
-              <option value="sports">sports</option>
-            </select>
-          </label>
-
-          <label>
-            <span class="label">Price (₹)</span>
-            <input name="price" type="number" min="0" class="input" required [(ngModel)]="selectedProduct.price" />
-          </label>
-
-          <label>
-            <span class="label">Stock</span>
-            <input name="stock" type="number" min="0" class="input" required [(ngModel)]="selectedProduct.stock" />
-          </label>
-
-          <!-- Image URL input + live preview aligned horizontally -->
-          <label class="full">
-            <!-- <span class="label">Image URL</span> -->
-            <div class="image-url-group">
-              <span class="label">Image URL</span>
-              <input name="image" class="input" placeholder="https://example.com/image.jpg" [(ngModel)]="selectedProduct.image" />
-              <div class="image-preview">
-                <img *ngIf="selectedProduct.image" [src]="selectedProduct.image" alt="Preview" />
-              </div>
-            </div>
-          </label>
-
-          <label class="full">
-            <span class="label">Description</span>
-            <textarea name="description" rows="3" class="textarea" placeholder="Short product description" [(ngModel)]="selectedProduct.description"></textarea>
-          </label>
-        </div>
-      </div>
-
-      <footer class="modal-footer">
-        <button type="button" class="btn btn-muted" (click)="closeModal()">Cancel</button>
-        <button type="submit" class="btn btn-primary">Save product</button>
-      </footer>
-
-    </form>
-  </div>
-</div>
-
-
-
-
-  <!-- Delete Modal -->
-  <div class="modal" *ngIf="deleteTarget">
-    <div class="modal-backdrop" (click)="cancelDelete()"></div>
+  <!-- Add / Edit Modal (unchanged) -->
+  <div class="modal" *ngIf="modalOpen">
+    <div class="modal-backdrop" (click)="closeModal()"></div>
     <div class="modal-panel-wrapper">
-      <div class="modal-panel small" role="dialog" aria-modal="true">
+      <form class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modalTitle" (ngSubmit)="saveProduct()">
+        
         <header class="modal-header">
-          <h3>Confirm delete</h3>
-          <button type="button" class="close" (click)="cancelDelete()">✕</button>
+          <h2 id="modalTitle">{{ isEditMode ? 'Edit product' : 'Add product' }}</h2>
+          <button type="button" class="close" (click)="closeModal()">✕</button>
         </header>
+
         <div class="modal-body">
-          <p>Are you sure you want to delete <strong>{{ deleteTarget?.name }}</strong>?</p>
+          <div class="form-grid">
+            <label>
+              <span class="label">Name</span>
+              <input name="name" required class="input" placeholder="Product name" [(ngModel)]="selectedProduct.name" />
+            </label>
+
+            <label>
+              <span class="label">Category</span>
+              <select name="category" class="select" required [(ngModel)]="selectedProduct.category">
+                <option value="">Select</option>
+                <option value="Men">Men</option>
+                <option value="Women">Women</option>
+                <option value="Kids">Kids</option>
+                <option value="sports">sports</option>
+              </select>
+            </label>
+
+            <label>
+              <span class="label">Price (₹)</span>
+              <input name="price" type="number" min="0" class="input" required [(ngModel)]="selectedProduct.price" />
+            </label>
+
+            <label>
+              <span class="label">Stock</span>
+              <input name="stock" type="number" min="0" class="input" required [(ngModel)]="selectedProduct.stock" />
+            </label>
+
+            <!-- Image URL input + live preview aligned horizontally -->
+            <label class="full">
+              <div class="image-url-group">
+                <span class="label">Image URL</span>
+                <input name="image" class="input" placeholder="https://example.com/image.jpg" [(ngModel)]="selectedProduct.image" />
+                <div class="image-preview">
+                  <img *ngIf="selectedProduct.image" [src]="selectedProduct.image" alt="Preview" />
+                </div>
+              </div>
+            </label>
+
+            <label class="full">
+              <span class="label">Description</span>
+              <textarea name="description" rows="3" class="textarea" placeholder="Short product description" [(ngModel)]="selectedProduct.description"></textarea>
+            </label>
+          </div>
         </div>
+
         <footer class="modal-footer">
-          <button class="btn btn-muted" (click)="cancelDelete()">Cancel</button>
-          <button class="btn danger" (click)="confirmDelete()">Delete</button>
+          <button type="button" class="btn btn-muted" (click)="closeModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save product</button>
         </footer>
-      </div>
+
+      </form>
     </div>
   </div>
 </section>
