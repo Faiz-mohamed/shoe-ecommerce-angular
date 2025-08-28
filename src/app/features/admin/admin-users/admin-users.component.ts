@@ -31,9 +31,6 @@ export class AdminUsersComponent implements OnInit {
   selectedUserForOrders: User | null = null;
   selectedUserForDetails: User | null = null;
 
-  // action menu state (shows menu for a particular user id)
-  actionMenuOpenFor: string | null = null;
-
   constructor() {}
 
   ngOnInit(): void {
@@ -87,11 +84,25 @@ export class AdminUsersComponent implements OnInit {
 
   // actions
   openOrdersModal(user: User): void {
+    // If user details modal is open, close it to ensure orders modal is visible on top.
+    this.userModalOpen = false;
+    this.selectedUserForDetails = null;
+
     this.selectedUserForOrders = user;
     this.ordersModalOpen = true;
   }
 
+  // helper that opens orders from inside the details modal
+  openOrdersModalFromDetails(): void {
+    if (!this.selectedUserForDetails) return;
+    this.openOrdersModal(this.selectedUserForDetails);
+  }
+
   openUserModal(user: User): void {
+    // If orders modal is open, close it so details modal appears correctly.
+    this.ordersModalOpen = false;
+    this.selectedUserForOrders = null;
+
     this.selectedUserForDetails = user;
     this.userModalOpen = true;
   }
@@ -106,12 +117,7 @@ export class AdminUsersComponent implements OnInit {
   toggleSuspend(user: User): void {
     user.active = !user.active;
     // TODO: call backend to persist change
-    this.actionMenuOpenFor = null;
-  }
-
-  // action menu toggles
-  toggleActionMenu(userId: string): void {
-    this.actionMenuOpenFor = this.actionMenuOpenFor === userId ? null : userId;
+    // No layout shift now because badge has min-width and table is fixed layout
   }
 
   trackByUserId(_: number, user: User): string {

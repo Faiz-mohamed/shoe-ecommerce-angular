@@ -14,7 +14,6 @@ $shadow: 0 6px 18px rgba(0,0,0,0.6);
 .admin-users-page {
   padding: 2rem;
   min-height: 100vh;
-//   background: linear-gradient(180deg, $bg 0%, #000000 100%);
   background-color: transparent;
   color: $text;
   font-family: Inter, Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -26,18 +25,8 @@ $shadow: 0 6px 18px rgba(0,0,0,0.6);
     gap: 1rem;
     margin-bottom: 1.25rem;
 
-    h1 {
-      margin: 0;
-      font-size: 1.6rem;
-      color: $accent;
-    }
-    .sub {
-      margin: 0;
-      color: $muted;
-      font-size: 0.95rem;
-    }
-
-    .header-actions { button { margin-left: 0.5rem; } }
+    h1 { margin: 0; font-size: 1.6rem; color: $accent; }
+    .sub { margin: 0; color: $muted; font-size: 0.95rem; }
   }
 
   // Stats
@@ -48,7 +37,6 @@ $shadow: 0 6px 18px rgba(0,0,0,0.6);
     margin-bottom: 1.25rem;
 
     .stat-card {
-    //   background: $panel;#f39c12
       background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
       padding: 1rem;
       border-radius: $radius;
@@ -73,6 +61,7 @@ $shadow: 0 6px 18px rgba(0,0,0,0.6);
       width: 100%;
       border-collapse: collapse;
       min-width: 720px;
+      table-layout: fixed; /* prevents layout shift */
 
       thead {
         th {
@@ -91,26 +80,29 @@ $shadow: 0 6px 18px rgba(0,0,0,0.6);
         tr {
           transition: background 0.12s ease;
           border-bottom: 1px solid rgba(255,255,255,0.03);
+          vertical-align: middle;
 
-          &:hover {
-            background: rgba(255,255,255,0.02);
-          }
+          &:hover { background: rgba(255,255,255,0.02); }
         }
 
         td {
           padding: 0.9rem 1rem;
           vertical-align: middle;
           font-size: 0.95rem;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
 
           .mono { font-family: "Courier New", monospace; opacity: 0.95; }
+
+          .cell-id { width: 14%; }
+          .cell-email { width: 40%; }
+          .cell-status { width: 14%; display:flex; align-items:center; gap:0.6rem; }
+          .cell-orders { width: 12%; }
+          .cell-actions { width: 160px; text-align: right; }
+
           .link-btn {
-            background: none;
-            border: none;
-            color: $accent;
-            text-decoration: underline;
-            cursor: pointer;
-            padding: 0;
-            font-weight: 600;
+            background: none; border: none; color: $accent; text-decoration: underline; cursor: pointer; padding: 0; font-weight: 600;
           }
 
           .badge {
@@ -119,6 +111,8 @@ $shadow: 0 6px 18px rgba(0,0,0,0.6);
             border-radius: 999px;
             font-weight: 600;
             font-size: 0.8rem;
+            min-width: 72px; /* prevents layout shift when text changes */
+            text-align: center;
             &.active { background: $accent-opaque; color: $accent; }
             &.inactive { background: rgba(255,255,255,0.04); color: $muted; }
           }
@@ -137,40 +131,96 @@ $shadow: 0 6px 18px rgba(0,0,0,0.6);
       }
     }
 
-    // Action menu
-    .action-wrap { position: relative;
-      .btn.small { background: rgba(255,255,255,0.03); border: 0; color: $text; padding: 0.4rem 0.55rem; border-radius: 8px; cursor: pointer; }
-      .action-menu {
-        position: absolute;
-        right: 0;
-        top: 40px;
-        background: $panel;
-        border-radius: 8px;
-        box-shadow: 0 12px 30px rgba(0,0,0,0.6);
-        min-width: 160px;
-        z-index: 20;
-        padding: 0.35rem;
-        display: flex;
-        flex-direction: column;
+    // Actions group (replaces dropdown)
+    .actions-group {
+      display: inline-flex;
+      gap: 0.5rem;
+      align-items: center;
 
-        .menu-item {
-          background: transparent;
-          border: 0;
-          text-align: left;
-          padding: 0.6rem 0.8rem;
-          cursor: pointer;
-          color: $text;
-          font-size: 0.95rem;
+      .icon-btn {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 38px;
+        height: 38px;
+        border-radius: 8px;
+        border: 0;
+        background: transparent;
+        color: #fff;
+        cursor: pointer;
+        transition: transform 0.12s ease, box-shadow 0.12s ease, color 0.12s ease;
+        outline: none;
+        padding: 0;
+
+        svg { display: block; width: 18px; height: 18px; }
+
+        &:hover, &:focus {
+          transform: translateY(-4px) scale(1.04);
+          box-shadow: 0 8px 18px rgba(0,0,0,0.5);
+        }
+
+        /* tooltip */
+        .tooltip {
+          position: absolute;
+          left: 50%;
+          transform: translateX(-50%);
+          bottom: calc(100% + 10px);
+          background: rgba(0,0,0,0.8);
+          color: #fff;
+          padding: 6px 8px;
           border-radius: 6px;
-          width: 100%;
-          transition: background 0.12s ease;
-          &:hover { background: rgba(255,255,255,0.02); }
-          svg { vertical-align: middle; margin-right: 0.5rem; }
+          font-size: 12px;
+          white-space: nowrap;
+          opacity: 0;
+          pointer-events: none;
+          transition: opacity 0.12s ease, transform 0.12s ease;
+          transform-origin: bottom center;
+        }
+
+        &:hover .tooltip, &:focus .tooltip {
+          opacity: 1;
+          transform: translateX(-50%) translateY(-3px);
         }
       }
+
+      /* SUSPEND button styles */
+      .action-suspend {
+        color: $success; /* green when active */
+
+        &.suspended {
+          color: $danger; /* red when suspended */
+        }
+
+        /* decorative cross overlay when suspended (subtle) */
+        &.suspended::after {
+          content: '';
+          position: absolute;
+          width: 14px;
+          height: 2px;
+          background: rgba(255,255,255,0.95);
+          transform: rotate(45deg);
+          border-radius: 2px;
+        }
+        &.suspended::before {
+          content: '';
+          position: absolute;
+          width: 14px;
+          height: 2px;
+          background: rgba(255,255,255,0.95);
+          transform: rotate(-45deg);
+          border-radius: 2px;
+        }
+      }
+
+      /* ORDERS button: highlight accent on hover */
+      .action-orders { color: #fff; &:hover, &:focus { color: $accent; } }
+
+      /* VIEW button */
+      .action-view { color: #fff; &:hover, &:focus { color: $accent; } }
     }
 
-    // Mobile cards fallback (hidden on large screens)
+    // Mobile cards fallback
     .users-cards { display: none; gap: 1rem; margin-top: 0.5rem;
       .user-card {
         background: $panel;
@@ -191,7 +241,7 @@ $shadow: 0 6px 18px rgba(0,0,0,0.6);
     }
   }
 
-  // Modals
+  // Modals (unchanged)
   .modal-backdrop {
     position: fixed;
     inset: 0;
@@ -215,39 +265,27 @@ $shadow: 0 6px 18px rgba(0,0,0,0.6);
     flex-direction: column;
 
     .modal-header { display:flex; justify-content:space-between; align-items:center; padding:0.5rem 0;
-      h2 { margin:0; color: $accent; font-size: 1.1rem; }
+      h2 { margin:0; color: $accent; font-size: 1.1rem; text-align:center; }
       .btn.ghost { background: transparent; border: 0; color: $muted; font-size: 1.1rem; }
     }
 
     .modal-body { padding: 0.5rem 0; color: $muted;
       .muted { color: $muted; }
 
-      .orders-modal-table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 0.6rem;
-
+      .orders-modal-table { width: 100%; border-collapse: collapse; margin-top: 0.6rem;
         thead th { text-align:left; padding:0.6rem; font-size:0.85rem; color:$muted; border-bottom:1px solid rgba(255,255,255,0.03); }
         tbody td { padding:0.6rem; font-size:0.95rem; border-bottom:1px solid rgba(255,255,255,0.02); }
-
-        .status {
-          padding: 0.28rem 0.5rem;
-          border-radius: 999px;
-          font-weight:700;
-          font-size:0.8rem;
-          &.pending { color: $accent; background: rgba(243,156,18,0.08); }
-          &.shipped { color: $info; background: rgba(52,152,219,0.06); }
-          &.delivered { color: $success; background: rgba(46,204,113,0.06); }
-          &.cancelled { color: $danger; background: rgba(231,76,60,0.06); }
-        }
       }
 
-      .user-details { display:grid; grid-template-columns: 1fr 1fr; gap: 0.6rem;
-        dt { color: $muted; font-size: 0.85rem; }
-        dd { margin: 0; color: $text; font-weight:600; }
+      .user-details {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.6rem;
+        dt { color: $muted; font-size: 0.85rem; text-align: center; } /* centered headings */
+        dd { margin: 0; color: $text; font-weight:600; text-align: center; } /* centered values */
       }
 
-      .user-actions { margin-top: 0.8rem; display:flex; gap:0.6rem; }
+      .user-actions { margin-top: 0.8rem; display:flex; gap:0.6rem; justify-content:center; }
     }
 
     .modal-footer { display:flex; justify-content:flex-end; gap:0.5rem; padding-top:0.6rem;
@@ -284,7 +322,6 @@ $shadow: 0 6px 18px rgba(0,0,0,0.6);
 
   @media (max-width: 720px) {
     padding: 1rem;
-
     .stats-grid { grid-template-columns: 1fr; }
 
     // hide big table and show cards
