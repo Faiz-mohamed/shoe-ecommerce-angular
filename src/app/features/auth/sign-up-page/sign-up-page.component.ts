@@ -34,7 +34,8 @@ export class SignUpPageComponent implements OnInit{
       lastName: this.signUpForm.value.lastName || undefined,
       email: this.signUpForm.value.email,
       phoneNumber: this.signUpForm.value.phoneNumber || undefined,
-      password: this.signUpForm.value.password
+      password: this.signUpForm.value.password,
+      role: "user"
     };
 
     this.auth.signUp(userData)

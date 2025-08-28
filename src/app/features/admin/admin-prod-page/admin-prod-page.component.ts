@@ -1,15 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, computed, signal } from '@angular/core';
+import { AuthService } from 'src/app/core/services/auth.service';
+import { ProductService } from 'src/app/core/services/product.service';
 import Swal from 'sweetalert2';
 
 interface Product {
   id: number;
   name: string;
-  sku: string;
+  sku?: string;
   category: string;
   price: number;
   stock: number;
   image: string;
   description: string;
+  brand?:string;
 }
 
 @Component({
@@ -17,25 +20,49 @@ interface Product {
   templateUrl: './admin-prod-page.component.html',
   styleUrls: ['./admin-prod-page.component.scss']
 })
-export class AdminProdPageComponent implements OnInit {
+export class AdminProdPageComponent {
+
+  liveSearch! :string;
+
+  prodService: ProductService = inject(ProductService);
+
+  // Template-friendly mutable state (ngModel, template checks)
   products: Product[] = [];
-  filteredProducts: Product[] = [];
+  filteredProductsArray: Product[] = []; // not strictly required, but kept for safety
   selectedProduct: Product = this.emptyProduct();
   isEditMode = false;
   modalOpen = false;
 
-  filterCategoryValue = 'all';
-  searchQuery = '';
+  // Signals for reactive filters (internal)
+  private filterCategoryValue = signal<string>('all');
+  private searchQuery = signal<string>('');
 
-  // localStorage key (optional persistence)
-  private storageKey = 'mock_products_v1';
+  // computed signal that delegates to your service's filter method
+  private filteredProductsSignal = computed(() =>
+    this.prodService.filterProductByCategorySearch(this.filterCategoryValue(), this.searchQuery())
+  );
 
-  ngOnInit(): void {
-    this.loadProducts();
-    this.applyFilters();
+  // Expose getter so template can use `filteredProducts` as before (no parentheses)
+  get filteredProducts(): Product[] {
+    // return copy to be safe for template usage
+    return this.filteredProductsSignal().map(p => ({ ...p }));
   }
 
-  // initial empty product
+  // Keep old-style getters expected by template (names unchanged)
+  get totalProducts(): number {
+    return this.prodService.getProducts().length;
+  }
+
+  get totalCategories(): number {
+    // return new Set(this.prodService.getProducts().map(p => p.category)).size;
+    return 4
+  }
+
+  get lowStockCount(): number {
+    return this.prodService.getProducts().filter(p => p.stock <= 5).length;
+  }
+
+  // ---------- utilities ----------
   emptyProduct(): Product {
     return {
       id: 0,
@@ -49,90 +76,62 @@ export class AdminProdPageComponent implements OnInit {
     };
   }
 
-  // load products from localStorage, fallback to defaults
-  private loadProducts() {
-    const raw = localStorage.getItem(this.storageKey);
-    if (raw) {
-      try {
-        this.products = JSON.parse(raw) as Product[];
-      } catch {
-        this.products = this.defaultProducts();
-      }
-    } else {
-      this.products = this.defaultProducts();
-    }
+  // load initial products into local 'products' array (optional; template uses filteredProducts getter)
+  ngOnInit(): void {
+    // Ensure service products are loaded (service getProducts refreshes from localStorage)
+    this.products = this.prodService.getProducts().map(p => ({ ...p }));
+    // Keep filteredProductsArray in sync (not required because template uses getter)
+    this.filteredProductsArray = this.filteredProducts;
   }
 
-  // default seed data
-  private defaultProducts(): Product[] {
-    return [
-      {
-        id: 1,
-        name: 'Nike Air Zoom',
-        sku: 'NKA-001',
-        category: 'sneakers',
-        price: 9999,
-        stock: 12,
-        image: 'https://plus.unsplash.com/premium_photo-1664474619075-644dd191935f?fm=jpg&q=60&w=3000',
-        description: 'Short description'
-      },
-      {
-        id: 2,
-        name: 'Adidas Runner',
-        sku: 'ADR-002',
-        category: 'running',
-        price: 7999,
-        stock: 8,
-        image: 'https://plus.unsplash.com/photo-1599009955624-028f5f27e7b9?fm=jpg&q=60&w=3000',
-        description: 'Lightweight running shoes'
-      }
-    ];
-  }
-
-  // persist products to localStorage
-  private saveProducts() {
-    localStorage.setItem(this.storageKey, JSON.stringify(this.products));
-  }
-
-  // CRUD / Modal logic
-  openAdd() {
+  // ---------- modal / CRUD handlers ----------
+  openAdd(): void {
     this.selectedProduct = this.emptyProduct();
     this.isEditMode = false;
     this.modalOpen = true;
   }
 
-  openEdit(product: Product) {
-    this.selectedProduct = { ...product };
+  openEdit(product: Product): void {
+    this.selectedProduct = { ...product }; // clone so edits don't mutate the list until save
     this.isEditMode = true;
     this.modalOpen = true;
   }
 
-  saveProduct() {
-    if (!this.selectedProduct) return;
-
-    if (this.isEditMode && this.selectedProduct.id) {
-      const idx = this.products.findIndex(p => p.id === this.selectedProduct.id);
-      if (idx > -1) {
-        this.products[idx] = { ...this.selectedProduct };
-      }
-    } else {
-      // new product
-      const nextId = this.getNextId();
-      this.selectedProduct.id = nextId;
-      // generate SKU if not provided
-      if (!this.selectedProduct.sku) {
-        this.selectedProduct.sku = 'SKU-' + String(nextId).padStart(3, '0');
-      }
-      this.products.push({ ...this.selectedProduct });
-    }
-
-    this.saveProducts();
-    this.applyFilters();
-    this.closeModal();
+  closeModal(): void {
+    this.modalOpen = false;
+    this.selectedProduct = this.emptyProduct();
+    this.isEditMode = false;
   }
 
-  // ---------- replaced modal delete flow with SweetAlert2 ----------
-  deleteProduct(product: Product) {
+  saveProduct(): void {
+    const prod = this.selectedProduct;
+    if (!prod) return;
+
+    if (this.isEditMode) {
+      // update via service (service persists and checks admin)
+      this.prodService.updateProduct(prod);
+    } else {
+      // create new id using current products from service
+      const all = this.prodService.getProducts();
+      const nextId = all.length ? Math.max(...all.map(p => p.id)) + 1 : 1;
+      prod.id = nextId;
+
+      if (!prod.sku) {
+        prod.sku = 'SKU-' + String(nextId).padStart(3, '0');
+      }
+
+      this.prodService.addProduct({ ...prod });
+    }
+
+    // refresh local arrays / computed will pick it up automatically
+    this.products = this.prodService.getProducts().map(p => ({ ...p }));
+    this.filteredProductsArray = this.filteredProducts;
+    this.closeModal();
+    this.searchQuery.set(('').toLowerCase());
+    this.liveSearch = ''
+  }
+
+  deleteProduct(product: Product): void {
     Swal.fire({
       title: 'Are you sure?',
       text: `Do you want to delete "${product.name}"? This action cannot be undone!`,
@@ -140,66 +139,35 @@ export class AdminProdPageComponent implements OnInit {
       showCancelButton: true,
       confirmButtonText: 'Delete',
       cancelButtonText: 'Cancel',
-      customClass: {
-      popup: 'custom-swal'   // apply your custom class
-      },
-      // optional: focus cancel to avoid accidental deletion
+      customClass: { popup: 'custom-swal' },
       focusCancel: true
     }).then((result) => {
       if (result.isConfirmed) {
-        // perform deletion
-        this.products = this.products.filter(p => p.id !== product.id);
-        this.saveProducts();
-        this.applyFilters();
-
-        // Note: user said they'll use Toastr — if you want to show toastr here, inject it and call it.
-        // e.g. this.toastr.success(`${product.name} deleted`, 'Deleted');
+        this.prodService.deleteProduct(product.id);
+        // refresh local arrays; computed will reflect service changes
+        this.products = this.prodService.getProducts().map(p => ({ ...p }));
+        this.filteredProductsArray = this.filteredProducts;
+        this.searchQuery.set(('').toLowerCase());
+        this.liveSearch = ''
       }
     });
   }
-  // ----------------------------------------------------------------
 
-  closeModal() {
-    this.modalOpen = false;
-    // small delay not required; clear selected after closing to reset form
-    this.selectedProduct = this.emptyProduct();
-    this.isEditMode = false;
+  // ---------- filters (update signals) ----------
+  filterCategory(category: string): void {
+    this.filterCategoryValue.set(category);
+    // optional quick local update
+    this.filteredProductsArray = this.filteredProducts;
   }
 
-  // search & filter
-  filterCategory(category: string) {
-    this.filterCategoryValue = category;
-    this.applyFilters();
+  searchProducts(query: string): void {
+    this.liveSearch = query;
+    this.searchQuery.set((query || '').toLowerCase());
+    this.filteredProductsArray = this.filteredProducts;
   }
 
-  searchProducts(query: string) {
-    this.searchQuery = (query || '').toLowerCase();
-    this.applyFilters();
-  }
-
-  applyFilters() {
-    this.filteredProducts = this.products.filter(p => {
-      const categoryMatch = this.filterCategoryValue === 'all' || p.category === this.filterCategoryValue;
-      const searchMatch = !this.searchQuery || p.name.toLowerCase().includes(this.searchQuery) || (p.sku && p.sku.toLowerCase().includes(this.searchQuery));
-      return categoryMatch && searchMatch;
-    });
-  }
-
-  // helpers
-  getNextId(): number {
-    return this.products.length ? Math.max(...this.products.map(p => p.id)) + 1 : 1;
-  }
-
-  // summary getters used by template
-  get totalProducts(): number {
-    return this.products.length;
-  }
-
-  get totalCategories(): number {
-    return new Set(this.products.map(p => p.category)).size;
-  }
-
-  get lowStockCount(): number {
-    return this.products.filter(p => p.stock <= 5).length;
+  // template helper kept for compatibility (if template uses this)
+  getProductsForTemplate(): Product[] {
+    return this.filteredProducts;
   }
 }

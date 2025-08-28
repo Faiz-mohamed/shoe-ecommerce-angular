@@ -6,7 +6,7 @@
     </div>
     <div class="header-actions">
       <!-- future: search, filters -->
-      <button class="btn small ghost" aria-label="Add user">+ Add user</button>
+      <!-- <button class="btn small ghost" aria-label="Add user">+ Add user</button> -->
     </div>
   </header>
 
@@ -191,35 +191,60 @@
 
   <!-- User Details Modal -->
   <div class="modal-backdrop" *ngIf="userModalOpen" (click)="closeModals()" aria-hidden="true"></div>
-  <div class="modal" *ngIf="userModalOpen" role="dialog" aria-modal="true" aria-labelledby="user-modal-title">
+  <div class="modal user-modal" *ngIf="userModalOpen" role="dialog" aria-modal="true" aria-labelledby="user-modal-title">
     <header class="modal-header">
       <h2 id="user-modal-title">User Details — {{ selectedUserForDetails?.id }}</h2>
       <button class="btn ghost small" (click)="closeModals()" aria-label="Close">✕</button>
     </header>
 
     <div class="modal-body">
-      <dl class="user-details">
-        <div>
-          <dt>Email</dt>
-          <dd>{{ selectedUserForDetails?.email }}</dd>
+      <!-- New: two-column, horizontal label/value layout -->
+      <div class="user-details-grid" *ngIf="selectedUserForDetails">
+        <!-- Row 1 -->
+        <div class="info-row">
+          <div class="label">Full name</div>
+          <div class="value">{{ selectedUserForDetails?.fullName || '—' }}</div>
         </div>
-        <div>
-          <dt>Account Status</dt>
-          <dd><span class="badge" [ngClass]="{ 'active': selectedUserForDetails?.active, 'inactive': !selectedUserForDetails?.active }">{{ selectedUserForDetails?.active ? 'Active' : 'Inactive' }}</span></dd>
+
+        <div class="info-row">
+          <div class="label">Email</div>
+          <div class="value">{{ selectedUserForDetails?.email }}</div>
         </div>
-        <div>
-          <dt>Online</dt>
-          <dd>{{ selectedUserForDetails?.online ? 'Yes' : 'No' }}</dd>
+
+        <!-- Row 2 -->
+        <div class="info-row">
+          <div class="label">Phone</div>
+          <div class="value">{{ selectedUserForDetails?.phone || '—' }}</div>
         </div>
-        <div>
-          <dt>Created</dt>
-          <dd>{{ selectedUserForDetails?.createdAt }}</dd>
+
+        <div class="info-row">
+          <div class="label">Account status</div>
+          <div class="value">
+            <span class="badge" [ngClass]="{ 'active': selectedUserForDetails?.active, 'inactive': !selectedUserForDetails?.active }">
+              {{ selectedUserForDetails?.active ? 'Active' : 'Inactive' }}
+            </span>
+          </div>
         </div>
-        <div>
-          <dt>Orders</dt>
-          <dd>{{ selectedUserForDetails?.orders?.length }}</dd>
+
+        <!-- Row 3 -->
+        <div class="info-row">
+          <div class="label">Online</div>
+          <div class="value">{{ selectedUserForDetails?.online ? 'Yes' : 'No' }}</div>
         </div>
-      </dl>
+
+        <div class="info-row">
+          <div class="label">Created</div>
+          <div class="value">{{ selectedUserForDetails?.createdAt }}</div>
+        </div>
+
+        <!-- Row 4 -->
+        <div class="info-row wide">
+          <div class="label">Orders</div>
+          <div class="value">{{ selectedUserForDetails?.orders?.length }}</div>
+        </div>
+
+        <!-- If you want more space or another column you can add more info-row blocks -->
+      </div>
 
       <div class="user-actions">
         <button class="btn" (click)="toggleSuspend(selectedUserForDetails!)">{{ selectedUserForDetails?.active ? 'Suspend' : 'Unsuspend' }}</button>

@@ -16,7 +16,7 @@
           <option value="sports">sports</option>
         </select>
 
-        <input #searchBox type="search" placeholder="Search products" class="input search" (input)="searchProducts(searchBox.value)" />
+        <input #searchBox type="search" placeholder="Search products" class="input search" value="{{liveSearch}}" (input)="searchProducts(searchBox.value)" />
       </div>
 
       <button class="btn btn-primary" (click)="openAdd()">+ Add product</button>
@@ -64,8 +64,8 @@
                 <div class="muted small">SKU: {{ product.sku }}</div>
               </div>
             </td>
-            <td>{{ product.category }}</td>
-            <td>₹ {{ product.price | number }}</td>
+            <td>{{ product.category}}</td>
+            <td>$ {{ product.price | number }}</td>
             <td>
               <span class="stock" [ngClass]="{'in-stock': product.stock > 0, 'out-of-stock': product.stock === 0}">
                 {{ product.stock }}
@@ -116,7 +116,7 @@
             </label>
 
             <label>
-              <span class="label">Price (₹)</span>
+              <span class="label">Price ($)</span>
               <input name="price" type="number" min="0" class="input" required [(ngModel)]="selectedProduct.price" />
             </label>
 

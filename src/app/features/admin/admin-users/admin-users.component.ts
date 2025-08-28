@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
+import { AuthService } from 'src/app/core/services/auth.service';
 
 interface Order {
   id: string;
@@ -10,12 +11,14 @@ interface Order {
 
 interface User {
   id: string;
+  fullName?: string;
   email: string;
+  phone?: string;
   active: boolean;
   online: boolean;
   createdAt: string;
   orders: Order[];
-  // extendable fields: name, role, phone, address...
+  // extendable fields: role, address, etc.
 }
 
 @Component({
@@ -24,6 +27,9 @@ interface User {
   styleUrls: ['./admin-users.component.scss']
 })
 export class AdminUsersComponent implements OnInit {
+
+  auth: AuthService = inject(AuthService);
+  //this.auth.getAllUsers()
   users: User[] = [];
   // modal state
   ordersModalOpen = false;
@@ -34,42 +40,103 @@ export class AdminUsersComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
-    // sample data — replace with real API data
-    this.users = [
-      {
-        id: 'U-1001',
-        email: 'john.doe@example.com',
-        active: true,
-        online: true,
-        createdAt: '2024-10-10',
-        orders: [
-          { id: '#1001', date: '2025-08-20', total: 120.0, status: 'pending', sku: 'RUNSHOE-BLK-42' },
-          { id: '#1005', date: '2025-07-12', total: 89.99, status: 'delivered', sku: 'SOCKS-WHT-01' }
-        ]
-      },
-      {
-        id: 'U-1002',
-        email: 'jane.smith@example.com',
-        active: false,
-        online: false,
-        createdAt: '2025-01-15',
-        orders: [
-          { id: '#1002', date: '2025-08-21', total: 75.5, status: 'shipped', sku: 'SNEAK-WHT-40' }
-        ]
-      },
-      {
-        id: 'U-1003',
-        email: 'david.lee@example.com',
-        active: true,
-        online: false,
-        createdAt: '2023-11-03',
-        orders: [
-          { id: '#1003', date: '2025-08-22', total: 220.99, status: 'delivered', sku: 'BOOT-BRN-44' },
-          { id: '#1010', date: '2024-12-01', total: 55.0, status: 'cancelled', sku: 'INSOLE-XL' }
-        ]
-      }
-    ];
+    this.loadUsers();
   }
+
+  /**
+   * Load users from the injected Auth/User service if available.
+   * - Supports synchronous arrays and Observables (subscribe).
+   * - Maps incoming raw user objects to the `User` shape used by this component.
+   * - Safely derives fullName from firstName + optional lastName.
+   */
+  private loadUsers(): void {
+    // Defensive: try common method names on the service
+    const maybeFn = (this.auth as any).getAllUsers ?? (this.auth as any).getUsers ?? null;
+
+    if (!maybeFn) {
+      // service doesn't expose a users getter — use fallback sample list
+      return;
+    }
+
+    try {
+      const maybe = maybeFn.call(this.auth);
+
+      // If it's an Observable (has subscribe), subscribe
+      if (maybe && typeof maybe.subscribe === 'function') {
+        (maybe as any).subscribe({
+          next: (list: any[]) => {
+            this.users = (list || []).map((u, idx) => this.mapToComponentUser(u, idx));
+          },
+          error: (err: any) => {
+            console.error('Failed to load users from service (observable):', err);
+          }
+        });
+      } else {
+        // Synchronous array expected
+        const list = (maybe as any[]) || [];
+        this.users = list.map((u, idx) => this.mapToComponentUser(u, idx));
+      }
+    } catch (err) {
+      console.error('Failed to load users from service:', err);
+    }
+  }
+
+  /**
+   * Map any raw user object (from AuthService/UserService) into this component's User interface.
+   * Handles variations in property names and optional lastName.
+   */
+  private mapToComponentUser(raw: any, index: number): User {
+    // Raw fields that services often use:
+    //  - firstName / lastName  OR name / fullName
+    //  - email
+    //  - phoneNumber or phone
+    //  - createdAt or created
+    //  - orders (optional)
+    //  - active / online may be missing; default sensible values
+
+    const firstName = raw?.firstName ?? raw?.name ?? null;
+    const lastName = raw?.lastName ?? raw?.surname ?? raw?.familyName ?? null;
+
+    const fullNameFromRaw = raw?.fullName ?? raw?.name ?? null;
+    // prefer explicit fullName if present, otherwise construct from firstName + optional lastName
+    const fullName =
+      typeof fullNameFromRaw === 'string' && fullNameFromRaw.trim().length > 0
+        ? fullNameFromRaw
+        : (firstName ? (firstName + (lastName ? ' ' + lastName : '')) : (raw?.email ?? `User ${index + 1}`));
+
+    // id preference: raw.id, raw.email, or generated stable id using index
+    const id = raw?.id ?? (raw?.email ? String(raw.email) : `U-${1000 + index}`);
+
+    const email = raw?.email ?? raw?.username ?? 'no-reply@example.com';
+    const phone = raw?.phone ?? raw?.phoneNumber ?? raw?.contact ?? '';
+
+    const createdAt = raw?.createdAt ?? raw?.created ?? new Date().toISOString().slice(0, 10);
+
+    const orders: Order[] = Array.isArray(raw?.orders)
+      ? raw.orders.map((o: any) => ({
+          id: o?.id ?? o?.orderId ?? '#0',
+          date: o?.date ?? o?.createdAt ?? new Date().toISOString().slice(0,10),
+          total: Number(o?.total ?? o?.amount ?? 0),
+          status: o?.status ?? 'pending',
+          sku: o?.sku
+        }))
+      : [];
+
+    const active = typeof raw?.active === 'boolean' ? raw.active : true;
+    const online = typeof raw?.online === 'boolean' ? raw.online : false;
+
+    return {
+      id: String(id),
+      fullName: fullName,
+      email: String(email),
+      phone: phone || undefined,
+      active,
+      online,
+      createdAt,
+      orders
+    };
+  }
+
 
   // derived stats
   get totalUsers(): number {
@@ -116,8 +183,7 @@ export class AdminUsersComponent implements OnInit {
 
   toggleSuspend(user: User): void {
     user.active = !user.active;
-    // TODO: call backend to persist change
-    // No layout shift now because badge has min-width and table is fixed layout
+    // TODO: call backend or service to persist this change if needed
   }
 
   trackByUserId(_: number, user: User): string {
@@ -127,5 +193,17 @@ export class AdminUsersComponent implements OnInit {
   // convenience formatting
   formatCurrency(amount: number): string {
     return '$' + amount.toFixed(2);
+  }
+
+  /**
+   * Optional helper if your template prefers a method instead of reading user.fullName
+   * Usage in template: {{ getFullName(user) }}
+   */
+  getFullName(u: any): string {
+    if (!u) return '';
+    if (typeof u.fullName === 'string' && u.fullName.trim().length) return u.fullName;
+    const first = u.firstName ?? u.name ?? '';
+    const last = u.lastName ?? '';
+    return (first + (last ? ' ' + last : '')).trim() || u.email || '';
   }
 }

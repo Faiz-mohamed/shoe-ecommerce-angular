@@ -241,7 +241,7 @@ $shadow: 0 6px 18px rgba(0,0,0,0.6);
     }
   }
 
-  // Modals (unchanged)
+  // Modals
   .modal-backdrop {
     position: fixed;
     inset: 0;
@@ -265,7 +265,7 @@ $shadow: 0 6px 18px rgba(0,0,0,0.6);
     flex-direction: column;
 
     .modal-header { display:flex; justify-content:space-between; align-items:center; padding:0.5rem 0;
-      h2 { margin:0; color: $accent; font-size: 1.1rem; text-align:center; }
+      h2 { margin:0; color: $accent; font-size: 1.1rem; }
       .btn.ghost { background: transparent; border: 0; color: $muted; font-size: 1.1rem; }
     }
 
@@ -277,13 +277,50 @@ $shadow: 0 6px 18px rgba(0,0,0,0.6);
         tbody td { padding:0.6rem; font-size:0.95rem; border-bottom:1px solid rgba(255,255,255,0.02); }
       }
 
-      .user-details {
+      /* NEW: user details grid (two-column) */
+      .user-details-grid {
         display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 0.6rem;
-        dt { color: $muted; font-size: 0.85rem; text-align: center; } /* centered headings */
-        dd { margin: 0; color: $text; font-weight:600; text-align: center; } /* centered values */
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px 14px;
+        margin-bottom: 0.8rem;
+
+        .info-row {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 10px 12px;
+          background: rgba(255,255,255,0.02);
+          border-radius: 8px;
+          min-height: 48px; /* gives room for longer values */
+          color: $text;
+
+          .label {
+            color: $muted;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-right: 12px;
+            white-space: nowrap;
+            text-align: left;
+            flex: 0 0 auto;
+          }
+
+          .value {
+            color: $text;
+            font-weight: 700;
+            text-align: right;
+            word-break: break-word;
+            flex: 1 1 auto;
+            margin-left: 12px;
+          }
+        }
+
+        /* allow some rows to span full width if they contain longer content */
+        .info-row.wide {
+          grid-column: 1 / -1;
+        }
       }
+
+      .user-details { /* kept for backward compat; not used by new layout */ }
 
       .user-actions { margin-top: 0.8rem; display:flex; gap:0.6rem; justify-content:center; }
     }
@@ -327,6 +364,11 @@ $shadow: 0 6px 18px rgba(0,0,0,0.6);
     // hide big table and show cards
     .users-table { display: none; }
     .users-cards { display: grid; grid-template-columns: 1fr; }
+
+    /* collapse the user-details grid to a single column for small screens */
+    .user-modal .user-details-grid {
+      grid-template-columns: 1fr;
+    }
 
     .modal { width: 96vw; max-height: 92vh; }
   }

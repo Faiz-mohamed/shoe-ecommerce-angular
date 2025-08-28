@@ -1,10 +1,16 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Product } from '../models/product.model';
+import { AuthService } from './auth.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductService {
+
+  auth :AuthService = inject(AuthService);
+  toastr :ToastrService = inject(ToastrService);
+
   private products :Product[] = [
   {
     "id": 1,
@@ -781,10 +787,16 @@ export class ProductService {
 //========================================================================================================//
 
   getProducts(){
+    const storedProducts = localStorage.getItem('allProducts');
+
+    this.products = storedProducts ? JSON.parse(storedProducts) : this.products;
+
     return this.products
+
   }
 
   getProductById(id :number){
+    this.getProducts()
     return this.products.find(p => p.id === id)
   }
 
@@ -817,5 +829,66 @@ export class ProductService {
   return products;
 }
 
-  constructor() { }
+//================================================
+
+  addProduct(product :Product){
+    if(this.auth.getLoggedInUser()?.role === 'admin'){
+      this.products = this.getProducts();
+
+      this.products.push(product);
+
+      localStorage.setItem('allProducts' , JSON.stringify(this.products))
+
+      this.toastr.success(`${product.name} added successfully`)
+    }else{
+      this.toastr.error('Admin Acces Only')
+    }
+  }
+
+  deleteProduct( productId :number ){
+    if(this.auth.getLoggedInUser()?.role === 'admin'){
+      this.products = this.getProducts();
+
+      const deletedProd = this.getProductById(productId)
+
+      this.products = this.products.filter(p => p.id !== productId);
+
+      localStorage.setItem('allProducts', JSON.stringify(this.products));
+      this.toastr.success(`${deletedProd?.name} deleted successfully`);
+    }else{
+      this.toastr.error('Admin Acces Only')
+    }
+  }
+
+  updateProduct(updatedProduct :Product){
+    if(this.auth.getLoggedInUser()?.role === 'admin'){
+    this.products = this.getProducts();
+    const product = this.getProductById(updatedProduct.id); // use your method
+    if (product) {
+      // Update the product properties
+      Object.assign(product, updatedProduct);
+      localStorage.setItem('allProducts', JSON.stringify(this.products));
+      this.toastr.success('Product updated successfully!');
+    } else {
+      this.toastr.warning('Product not found!');
+    }
+    } else {
+    this.toastr.error('Admin Access Only');
+    }
+  }
+
+
+constructor() {
+  // Key for localStorage
+  const storedProducts = localStorage.getItem('allProducts');
+
+  if (!storedProducts) {
+    // If no products exist yet, initialize with default products
+    localStorage.setItem('allProducts', JSON.stringify(this.products));
+  } else {
+    // Load persisted products into service array
+    this.products = JSON.parse(storedProducts);
+  }
+}
+
 }
