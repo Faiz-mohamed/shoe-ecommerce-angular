@@ -72,6 +72,31 @@ Currently frontend-only, with plans to add a **.NET backend** and more advanced 
                     ├── admin-dashboard.component.scss
                     ├── admin-dashboard.component.spec.ts
                     ├── admin-dashboard.component.ts
+                └── 📁admin-orders
+                    ├── admin-orders.component.html
+                    ├── admin-orders.component.scss
+                    ├── admin-orders.component.spec.ts
+                    ├── admin-orders.component.ts
+                └── 📁admin-page
+                    ├── admin.component.html
+                    ├── admin.component.scss
+                    ├── admin.component.spec.ts
+                    ├── admin.component.ts
+                └── 📁admin-prod-page
+                    ├── admin-prod-page.component.html
+                    ├── admin-prod-page.component.scss
+                    ├── admin-prod-page.component.spec.ts
+                    ├── admin-prod-page.component.ts
+                └── 📁admin-settings
+                    ├── admin-settings.component.html
+                    ├── admin-settings.component.scss
+                    ├── admin-settings.component.spec.ts
+                    ├── admin-settings.component.ts
+                └── 📁admin-users
+                    ├── admin-users.component.html
+                    ├── admin-users.component.scss
+                    ├── admin-users.component.spec.ts
+                    ├── admin-users.component.ts
                 ├── admin-routing.module.ts
                 ├── admin.module.ts
             └── 📁auth
