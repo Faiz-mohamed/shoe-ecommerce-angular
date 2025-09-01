@@ -36,6 +36,10 @@ export class NavbarComponent implements OnInit{
     return !(url === '/auth/login' || url === '/auth/signup' || url.startsWith('/admin'));
   }
 
+  logOut(){
+    this.auth.logOut()
+  }
+
   onSearchClick(form :NgForm){
 
     this.searchText = form.value.search;

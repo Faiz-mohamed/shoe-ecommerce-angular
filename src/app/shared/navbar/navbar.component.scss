@@ -269,3 +269,29 @@
   opacity: 1;
 }
 
+.btn-logout {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.4rem 0.8rem;
+  border: 1px solid white;
+  border-radius: 4px;
+  color: white;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  vertical-align: middle;
+  line-height: 0;
+  box-sizing: border-box;
+
+  svg {
+    display: block;
+    width: 20px;
+    height: 20px;
+  }
+
+  &:hover {
+    background-color: #f39c12;
+    border-color: #f39c12;
+    color: #111;
+  }
+}

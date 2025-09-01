@@ -10,10 +10,13 @@ interface Order {
 }
 
 interface User {
-  id: string;
-  fullName?: string;
+  id?: string;
+  firstName: string;
+  lastName?: string;
+  fullName?: string;     // derived field for template convenience
   email: string;
-  phone?: string;
+  phone?: string;        // mapped from phoneNumber if present
+  phoneNumber?: string;  // keep original field if present on raw object
   active: boolean;
   online: boolean;
   createdAt: string;
@@ -29,7 +32,6 @@ interface User {
 export class AdminUsersComponent implements OnInit {
 
   auth: AuthService = inject(AuthService);
-  //this.auth.getAllUsers()
   users: User[] = [];
   // modal state
   ordersModalOpen = false;
@@ -43,100 +45,60 @@ export class AdminUsersComponent implements OnInit {
     this.loadUsers();
   }
 
-  /**
-   * Load users from the injected Auth/User service if available.
-   * - Supports synchronous arrays and Observables (subscribe).
-   * - Maps incoming raw user objects to the `User` shape used by this component.
-   * - Safely derives fullName from firstName + optional lastName.
-   */
   private loadUsers(): void {
-    // Defensive: try common method names on the service
-    const maybeFn = (this.auth as any).getAllUsers ?? (this.auth as any).getUsers ?? null;
+    const svc = this.auth as any;
 
-    if (!maybeFn) {
-      // service doesn't expose a users getter — use fallback sample list
-      return;
-    }
+    let source: any = this.auth.getAllUsers();
 
-    try {
-      const maybe = maybeFn.call(this.auth);
-
-      // If it's an Observable (has subscribe), subscribe
-      if (maybe && typeof maybe.subscribe === 'function') {
-        (maybe as any).subscribe({
-          next: (list: any[]) => {
-            this.users = (list || []).map((u, idx) => this.mapToComponentUser(u, idx));
-          },
-          error: (err: any) => {
-            console.error('Failed to load users from service (observable):', err);
-          }
-        });
-      } else {
-        // Synchronous array expected
-        const list = (maybe as any[]) || [];
-        this.users = list.map((u, idx) => this.mapToComponentUser(u, idx));
-      }
-    } catch (err) {
-      console.error('Failed to load users from service:', err);
-    }
+      const arr = Array.isArray(source) ? source : [];
+      this.users = arr.map((u, i) => this.mapToComponentUser(u, i));
   }
 
-  /**
-   * Map any raw user object (from AuthService/UserService) into this component's User interface.
-   * Handles variations in property names and optional lastName.
-   */
+
   private mapToComponentUser(raw: any, index: number): User {
-    // Raw fields that services often use:
-    //  - firstName / lastName  OR name / fullName
-    //  - email
-    //  - phoneNumber or phone
-    //  - createdAt or created
-    //  - orders (optional)
-    //  - active / online may be missing; default sensible values
+    const firstName = raw?.firstName ?? (typeof raw?.name === 'string' ? raw.name.split(' ')[0] : '');
+    const lastNameRaw = raw?.lastName ?? (typeof raw?.name === 'string' ? raw.name.split(' ').slice(1).join(' ') : undefined);
+    const explicitFull = raw?.fullName ?? raw?.displayName ?? raw?.name ?? undefined;
 
-    const firstName = raw?.firstName ?? raw?.name ?? null;
-    const lastName = raw?.lastName ?? raw?.surname ?? raw?.familyName ?? null;
-
-    const fullNameFromRaw = raw?.fullName ?? raw?.name ?? null;
-    // prefer explicit fullName if present, otherwise construct from firstName + optional lastName
     const fullName =
-      typeof fullNameFromRaw === 'string' && fullNameFromRaw.trim().length > 0
-        ? fullNameFromRaw
-        : (firstName ? (firstName + (lastName ? ' ' + lastName : '')) : (raw?.email ?? `User ${index + 1}`));
+      typeof explicitFull === 'string' && explicitFull.trim().length
+        ? explicitFull.trim()
+        : (firstName ? (firstName + (lastNameRaw ? ' ' + lastNameRaw : '')) : undefined);
 
-    // id preference: raw.id, raw.email, or generated stable id using index
-    const id = raw?.id ?? (raw?.email ? String(raw.email) : `U-${1000 + index}`);
+    // Prefer provided id; otherwise generate a stable-looking id based on index.
+    const id = raw?.id ?? `U-${1000 + index}`;
 
-    const email = raw?.email ?? raw?.username ?? 'no-reply@example.com';
-    const phone = raw?.phone ?? raw?.phoneNumber ?? raw?.contact ?? '';
-
-    const createdAt = raw?.createdAt ?? raw?.created ?? new Date().toISOString().slice(0, 10);
+    const email = raw?.email ?? '';
+    const phone = raw?.phoneNumber ?? raw?.phone ?? undefined;
+    const createdAt = raw?.createdAt ?? raw?.created ?? '';
 
     const orders: Order[] = Array.isArray(raw?.orders)
       ? raw.orders.map((o: any) => ({
           id: o?.id ?? o?.orderId ?? '#0',
-          date: o?.date ?? o?.createdAt ?? new Date().toISOString().slice(0,10),
+          date: o?.date ?? o?.createdAt ?? '',
           total: Number(o?.total ?? o?.amount ?? 0),
           status: o?.status ?? 'pending',
           sku: o?.sku
         }))
-      : [];
+      : []; // per your instruction, orders default to empty array when missing
 
     const active = typeof raw?.active === 'boolean' ? raw.active : true;
     const online = typeof raw?.online === 'boolean' ? raw.online : false;
 
     return {
       id: String(id),
-      fullName: fullName,
+      firstName: String(firstName ?? ''),
+      lastName: lastNameRaw ?? undefined,
+      fullName: fullName ?? undefined,
       email: String(email),
-      phone: phone || undefined,
+      phone: phone ?? undefined,
+      phoneNumber: raw?.phoneNumber ?? undefined,
       active,
       online,
       createdAt,
       orders
     };
   }
-
 
   // derived stats
   get totalUsers(): number {
@@ -183,11 +145,12 @@ export class AdminUsersComponent implements OnInit {
 
   toggleSuspend(user: User): void {
     user.active = !user.active;
-    // TODO: call backend or service to persist this change if needed
+    // TODO: call backend or AuthService to persist this change if needed
   }
 
-  trackByUserId(_: number, user: User): string {
-    return user.id;
+  trackByUserId(index: number, user: User): string {
+    // ensure unique stable id for ngFor even if user.id is missing
+    return user.id ?? `U-${1000 + index}`;
   }
 
   // convenience formatting
@@ -198,12 +161,12 @@ export class AdminUsersComponent implements OnInit {
   /**
    * Optional helper if your template prefers a method instead of reading user.fullName
    * Usage in template: {{ getFullName(user) }}
-   */
-  getFullName(u: any): string {
-    if (!u) return '';
-    if (typeof u.fullName === 'string' && u.fullName.trim().length) return u.fullName;
-    const first = u.firstName ?? u.name ?? '';
-    const last = u.lastName ?? '';
-    return (first + (last ? ' ' + last : '')).trim() || u.email || '';
-  }
+  //  */
+  // getFullName(u: any): string {
+  //   if (!u) return '';
+  //   if (typeof u.fullName === 'string' && u.fullName.trim().length) return u.fullName;
+  //   const first = u.firstName ?? u.name ?? '';
+  //   const last = u.lastName ?? '';
+  //   return (first + (last ? ' ' + last : '')).trim() || u.email || '';
+  // }
 }

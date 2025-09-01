@@ -56,7 +56,9 @@ export class AuthService {
     const storedUsers = localStorage.getItem(this.ALL_USERS_KEY);
     this.Users = storedUsers ? JSON.parse(storedUsers) : this.Users;
     return this.Users;    
-    }else{return null};
+    } else {
+      return null
+    };
   }
 
   logOut() {
