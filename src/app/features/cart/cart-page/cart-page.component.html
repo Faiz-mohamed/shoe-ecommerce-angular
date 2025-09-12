@@ -5,7 +5,7 @@
 
     <div class="cart-item" *ngFor="let p of cartProducts">
       <img [src]="p.product.image" alt="p.product.name" (click)="onProductClick(p.product.id)"
-      onerror="this.onerror=null; this.src='/assets/unavailable1.png';">
+      onerror="this.onerror=null; this.src='assets/unavailable1.png';">
       <div class="cart-info">
         <h3>{{p.product.name}}</h3>
         <div class="quantity">
